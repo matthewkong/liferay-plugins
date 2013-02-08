@@ -71,9 +71,9 @@ public class JabberImpl implements Jabber {
 	public String getResource(String jabberId) {
 		String resource = StringUtil.extractLast(jabberId, StringPool.AT);
 
-		resource = StringUtil.extractLast(jabberId, StringPool.SLASH);
+		resource = StringUtil.extractLast(resource, StringPool.SLASH);
 
-		if (Validator.isNull(resource)) {
+		if (resource == null) {
 			resource = StringPool.BLANK;
 		}
 
