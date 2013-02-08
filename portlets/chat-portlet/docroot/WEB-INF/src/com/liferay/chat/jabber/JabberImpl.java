@@ -73,6 +73,10 @@ public class JabberImpl implements Jabber {
 
 		resource = StringUtil.extractLast(jabberId, StringPool.SLASH);
 
+		if (Validator.isNull(resource)) {
+			resource = StringPool.BLANK;
+		}
+
 		return resource;
 	}
 
