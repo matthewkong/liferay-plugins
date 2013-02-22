@@ -435,14 +435,22 @@ public class JabberImpl implements Jabber {
 			}
 
 			if (online == 1) {
-				Presence presence = new Presence(Presence.Type.available);
+				if (!isOnline) {
+					Presence presence = new Presence(Presence.Type.available);
 
-				connection.sendPacket(presence);
+					connection.sendPacket(presence);
+
+					isOnline = true;
+				}
 			}
 			else if (online == 0) {
-				Presence presence = new Presence(Presence.Type.unavailable);
+				if (isOnline) {
+					Presence presence = new Presence(Presence.Type.unavailable);
 
-				connection.sendPacket(presence);
+					connection.sendPacket(presence);
+
+					isOnline = false;
+				}
 			}
 		}
 		catch (Exception e) {
@@ -456,5 +464,6 @@ public class JabberImpl implements Jabber {
 		new HashMap<Long, Connection>();
 
 	private ConnectionConfiguration _connectionConfiguration;
+	private boolean isOnline = false;
 
 }
