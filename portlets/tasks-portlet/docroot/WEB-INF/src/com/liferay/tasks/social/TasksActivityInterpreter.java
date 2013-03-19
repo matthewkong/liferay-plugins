@@ -19,7 +19,7 @@ package com.liferay.tasks.social;
 
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.security.permission.PermissionChecker;
-import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.tasks.model.TasksEntry;
@@ -35,7 +35,8 @@ public class TasksActivityInterpreter extends BaseSocialActivityInterpreter {
 	}
 
 	@Override
-	protected String getBody(SocialActivity activity, ThemeDisplay themeDisplay)
+	protected String getBody(
+			SocialActivity activity, ServiceContext serviceContext)
 		throws Exception {
 
 		TasksEntry tasksEntry = TasksEntryLocalServiceUtil.getTasksEntry(
@@ -47,7 +48,7 @@ public class TasksActivityInterpreter extends BaseSocialActivityInterpreter {
 
 	@Override
 	protected String getLink(
-		SocialActivity activity, ThemeDisplay themeDisplay) {
+		SocialActivity activity, ServiceContext serviceContext) {
 
 		return StringPool.BLANK;
 	}
@@ -55,7 +56,7 @@ public class TasksActivityInterpreter extends BaseSocialActivityInterpreter {
 	@Override
 	protected Object[] getTitleArguments(
 			String groupName, SocialActivity activity, String link,
-			String title, ThemeDisplay themeDisplay)
+			String title, ServiceContext serviceContext)
 		throws Exception {
 
 		long userId = activity.getUserId();
@@ -71,8 +72,8 @@ public class TasksActivityInterpreter extends BaseSocialActivityInterpreter {
 			receiverUserId = tasksEntry.getUserId();
 		}
 
-		String creatorUserName = getUserName(userId, themeDisplay);
-		String receiverUserName = getUserName(receiverUserId, themeDisplay);
+		String creatorUserName = getUserName(userId, serviceContext);
+		String receiverUserName = getUserName(receiverUserId, serviceContext);
 
 		return new Object[] {creatorUserName, receiverUserName};
 	}
@@ -125,7 +126,7 @@ public class TasksActivityInterpreter extends BaseSocialActivityInterpreter {
 	@Override
 	protected boolean hasPermissions(
 		PermissionChecker permissionChecker, SocialActivity activity,
-		String actionId, ThemeDisplay themeDisplay) {
+		String actionId, ServiceContext serviceContext) {
 
 		return true;
 	}

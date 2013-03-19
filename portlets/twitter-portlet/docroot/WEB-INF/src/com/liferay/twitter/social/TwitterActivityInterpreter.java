@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.Contact;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
@@ -36,7 +37,8 @@ public class TwitterActivityInterpreter extends BaseSocialActivityInterpreter {
 	}
 
 	@Override
-	protected String getBody(SocialActivity activity, ThemeDisplay themeDisplay)
+	protected String getBody(
+			SocialActivity activity, ServiceContext serviceContext)
 		throws Exception {
 
 		StringBundler sb = new StringBundler(4);
@@ -60,7 +62,7 @@ public class TwitterActivityInterpreter extends BaseSocialActivityInterpreter {
 
 	@Override
 	protected String getLink(
-		SocialActivity activity, ThemeDisplay themeDisplay) {
+		SocialActivity activity, ServiceContext serviceContext) {
 
 		return StringPool.BLANK;
 	}
@@ -68,8 +70,10 @@ public class TwitterActivityInterpreter extends BaseSocialActivityInterpreter {
 	@Override
 	protected Object[] getTitleArguments(
 			String groupName, SocialActivity activity, String link,
-			String title, ThemeDisplay themeDisplay)
+			String title, ServiceContext serviceContext)
 		throws Exception {
+
+		ThemeDisplay themeDisplay = serviceContext.getThemeDisplay();
 
 		StringBundler sb = new StringBundler(5);
 
@@ -85,7 +89,7 @@ public class TwitterActivityInterpreter extends BaseSocialActivityInterpreter {
 		sb.append("/profile");
 
 		String creatorUserName = getUserName(
-			activity.getUserId(), themeDisplay);
+			activity.getUserId(), serviceContext);
 
 		String creatorUserNameURL = wrapLink(sb.toString(), creatorUserName);
 
@@ -102,7 +106,7 @@ public class TwitterActivityInterpreter extends BaseSocialActivityInterpreter {
 	@Override
 	protected boolean hasPermissions(
 		PermissionChecker permissionChecker, SocialActivity activity,
-		String actionId, ThemeDisplay themeDisplay) {
+		String actionId, ServiceContext serviceContext) {
 
 		return true;
 	}

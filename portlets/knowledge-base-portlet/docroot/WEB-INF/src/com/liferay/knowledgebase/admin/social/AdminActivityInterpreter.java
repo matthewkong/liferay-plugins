@@ -28,6 +28,7 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
@@ -43,27 +44,30 @@ public class AdminActivityInterpreter extends BaseSocialActivityInterpreter {
 	}
 
 	@Override
-	protected String getLink(SocialActivity activity, ThemeDisplay themeDisplay)
+	protected String getLink(
+			SocialActivity activity, ServiceContext serviceContext)
 		throws Exception {
 
 		String className = activity.getClassName();
 
 		if (className.equals(KBArticle.class.getName())) {
-			return getLinkKBArticle(activity, themeDisplay);
+			return getLinkKBArticle(activity, serviceContext);
 		}
 		else if (className.equals(KBComment.class.getName())) {
-			return getLinkKBComment(activity, themeDisplay);
+			return getLinkKBComment(activity, serviceContext);
 		}
 		else if (className.equals(KBTemplate.class.getName())) {
-			return getLinkKBTemplate(activity, themeDisplay);
+			return getLinkKBTemplate(activity, serviceContext);
 		}
 
 		return StringPool.BLANK;
 	}
 
 	protected String getLinkKBArticle(
-			SocialActivity activity, ThemeDisplay themeDisplay)
+			SocialActivity activity, ServiceContext serviceContext)
 		throws Exception {
+
+		ThemeDisplay themeDisplay = serviceContext.getThemeDisplay();
 
 		KBArticle kbArticle = KBArticleLocalServiceUtil.getLatestKBArticle(
 			activity.getClassPK(), WorkflowConstants.STATUS_APPROVED);
@@ -74,8 +78,10 @@ public class AdminActivityInterpreter extends BaseSocialActivityInterpreter {
 	}
 
 	protected String getLinkKBComment(
-			SocialActivity activity, ThemeDisplay themeDisplay)
+			SocialActivity activity, ServiceContext serviceContext)
 		throws Exception {
+
+		ThemeDisplay themeDisplay = serviceContext.getThemeDisplay();
 
 		KBComment kbComment = KBCommentLocalServiceUtil.getKBComment(
 			activity.getClassPK());
@@ -99,7 +105,7 @@ public class AdminActivityInterpreter extends BaseSocialActivityInterpreter {
 	}
 
 	protected String getLinkKBTemplate(
-			SocialActivity activity, ThemeDisplay themeDisplay)
+			SocialActivity activity, ServiceContext serviceContext)
 		throws Exception {
 
 		return StringPool.BLANK;
@@ -108,21 +114,21 @@ public class AdminActivityInterpreter extends BaseSocialActivityInterpreter {
 	@Override
 	protected Object[] getTitleArguments(
 		String groupName, SocialActivity activity, String link, String title,
-		ThemeDisplay themeDisplay) {
+		ServiceContext serviceContext) {
 
 		String className = activity.getClassName();
 
 		if (className.equals(KBArticle.class.getName())) {
 			return getTitleArgumentsKBArticle(
-				groupName, activity, link, title, themeDisplay);
+				groupName, activity, link, title, serviceContext);
 		}
 		else if (className.equals(KBComment.class.getName())) {
 			return getTitleArgumentsKBComment(
-				groupName, activity, link, title, themeDisplay);
+				groupName, activity, link, title, serviceContext);
 		}
 		else if (className.equals(KBTemplate.class.getName())) {
 			return getTitleArgumentsKBTemplate(
-				groupName, activity, link, title, themeDisplay);
+				groupName, activity, link, title, serviceContext);
 		}
 
 		return new Object[0];
@@ -131,11 +137,11 @@ public class AdminActivityInterpreter extends BaseSocialActivityInterpreter {
 
 	protected Object[] getTitleArgumentsKBArticle(
 		String groupName, SocialActivity activity, String link, String title,
-		ThemeDisplay themeDisplay) {
+		ServiceContext serviceContext) {
 
 		try {
 			String creatorUserName = getUserName(
-				activity.getUserId(), themeDisplay);
+				activity.getUserId(), serviceContext);
 
 			KBArticle kbArticle = KBArticleLocalServiceUtil.getLatestKBArticle(
 				activity.getClassPK(), WorkflowConstants.STATUS_APPROVED);
@@ -154,11 +160,11 @@ public class AdminActivityInterpreter extends BaseSocialActivityInterpreter {
 
 	protected Object[] getTitleArgumentsKBComment(
 		String groupName, SocialActivity activity, String link, String title,
-		ThemeDisplay themeDisplay) {
+		ServiceContext serviceContext) {
 
 		try {
 			String creatorUserName = getUserName(
-				activity.getUserId(), themeDisplay);
+				activity.getUserId(), serviceContext);
 
 			KBComment kbComment = KBCommentLocalServiceUtil.getKBComment(
 				activity.getClassPK());
@@ -199,11 +205,11 @@ public class AdminActivityInterpreter extends BaseSocialActivityInterpreter {
 
 	protected Object[] getTitleArgumentsKBTemplate(
 		String groupName, SocialActivity activity, String link, String title,
-		ThemeDisplay themeDisplay) {
+		ServiceContext serviceContext) {
 
 		try {
 			String creatorUserName = getUserName(
-				activity.getUserId(), themeDisplay);
+				activity.getUserId(), serviceContext);
 
 			KBTemplate kbTemplate = KBTemplateLocalServiceUtil.getKBTemplate(
 				activity.getClassPK());
@@ -319,22 +325,22 @@ public class AdminActivityInterpreter extends BaseSocialActivityInterpreter {
 	@Override
 	protected boolean hasPermissions(
 			PermissionChecker permissionChecker, SocialActivity activity,
-			String actionId, ThemeDisplay themeDisplay)
+			String actionId, ServiceContext serviceContext)
 		throws Exception {
 
 		String className = activity.getClassName();
 
 		if (className.equals(KBArticle.class.getName())) {
 			return hasPermissionsKBArticle(
-				permissionChecker, activity, actionId, themeDisplay);
+				permissionChecker, activity, actionId, serviceContext);
 		}
 		else if (className.equals(KBComment.class.getName())) {
 			return hasPermissionsKBComment(
-				permissionChecker, activity, actionId, themeDisplay);
+				permissionChecker, activity, actionId, serviceContext);
 		}
 		else if (className.equals(KBTemplate.class.getName())) {
 			return hasPermissionsKBTemplate(
-				permissionChecker, activity, actionId, themeDisplay);
+				permissionChecker, activity, actionId, serviceContext);
 		}
 
 		return false;
@@ -342,7 +348,7 @@ public class AdminActivityInterpreter extends BaseSocialActivityInterpreter {
 
 	protected boolean hasPermissionsKBArticle(
 			PermissionChecker permissionChecker, SocialActivity activity,
-			String actionId, ThemeDisplay themeDisplay)
+			String actionId, ServiceContext serviceContext)
 		throws Exception {
 
 		KBArticle kbArticle = KBArticleLocalServiceUtil.getLatestKBArticle(
@@ -354,7 +360,7 @@ public class AdminActivityInterpreter extends BaseSocialActivityInterpreter {
 
 	protected boolean hasPermissionsKBComment(
 			PermissionChecker permissionChecker, SocialActivity activity,
-			String actionId, ThemeDisplay themeDisplay)
+			String actionId, ServiceContext serviceContext)
 		throws Exception {
 
 		return true;
@@ -362,7 +368,7 @@ public class AdminActivityInterpreter extends BaseSocialActivityInterpreter {
 
 	protected boolean hasPermissionsKBTemplate(
 			PermissionChecker permissionChecker, SocialActivity activity,
-			String actionId, ThemeDisplay themeDisplay)
+			String actionId, ServiceContext serviceContext)
 		throws Exception {
 
 		KBTemplate kbTemplate = KBTemplateLocalServiceUtil.getKBTemplate(

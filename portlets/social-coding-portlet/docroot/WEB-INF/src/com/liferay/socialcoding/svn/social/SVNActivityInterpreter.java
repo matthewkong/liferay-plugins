@@ -17,7 +17,7 @@ package com.liferay.socialcoding.svn.social;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.security.permission.PermissionChecker;
-import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.social.model.BaseSocialActivityInterpreter;
 import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.socialcoding.model.SVNRepository;
@@ -34,10 +34,11 @@ public class SVNActivityInterpreter extends BaseSocialActivityInterpreter {
 	}
 
 	@Override
-	protected String getBody(SocialActivity activity, ThemeDisplay themeDisplay)
+	protected String getBody(
+			SocialActivity activity, ServiceContext serviceContext)
 		throws Exception {
 
-		String link = getLink(activity, themeDisplay);
+		String link = getLink(activity, serviceContext);
 
 		SVNRevision svnRevision = SVNRevisionLocalServiceUtil.getSVNRevision(
 			activity.getClassPK());
@@ -46,7 +47,8 @@ public class SVNActivityInterpreter extends BaseSocialActivityInterpreter {
 	}
 
 	@Override
-	protected String getLink(SocialActivity activity, ThemeDisplay themeDisplay)
+	protected String getLink(
+			SocialActivity activity, ServiceContext serviceContext)
 		throws Exception {
 
 		SVNRevision svnRevision = SVNRevisionLocalServiceUtil.getSVNRevision(
@@ -58,7 +60,7 @@ public class SVNActivityInterpreter extends BaseSocialActivityInterpreter {
 	@Override
 	protected Object[] getTitleArguments(
 			String groupName, SocialActivity activity, String link,
-			String title, ThemeDisplay themeDisplay)
+			String title, ServiceContext serviceContext)
 		throws Exception {
 
 		int activityType = activity.getType();
@@ -68,7 +70,7 @@ public class SVNActivityInterpreter extends BaseSocialActivityInterpreter {
 		}
 
 		String creatorUserName = getUserName(
-			activity.getUserId(), themeDisplay);
+			activity.getUserId(), serviceContext);
 
 		SVNRevision svnRevision = SVNRevisionLocalServiceUtil.getSVNRevision(
 			activity.getClassPK());
@@ -97,7 +99,7 @@ public class SVNActivityInterpreter extends BaseSocialActivityInterpreter {
 	@Override
 	protected boolean hasPermissions(
 		PermissionChecker permissionChecker, SocialActivity activity,
-		String actionId, ThemeDisplay themeDisplay) {
+		String actionId, ServiceContext serviceContext) {
 
 		return true;
 	}
