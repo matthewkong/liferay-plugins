@@ -67,6 +67,8 @@ public class JabberImpl implements Jabber {
 		connection.disconnect();
 
 		_connections.remove(userId);
+
+		_isOnline.remove(userId);
 	}
 
 	public String getResource(String jabberId) {
@@ -341,7 +343,12 @@ public class JabberImpl implements Jabber {
 		Status status = StatusLocalServiceUtil.getUserStatus(userId);
 
 		if (status.getOnline()) {
+			_isOnline.put(userId, false);
+
 			updateStatus(userId, 1, connection);
+		}
+		else {
+			_isOnline.put(userId, true);
 		}
 
 		ChatManager chatManager = connection.getChatManager();
@@ -442,15 +449,19 @@ public class JabberImpl implements Jabber {
 				}
 			}
 
-			if (online == 1) {
+			if (online == 1 && (_isOnline.get(userId) == false)) {
 				Presence presence = new Presence(Presence.Type.available);
 
 				connection.sendPacket(presence);
+
+				_isOnline.put(userId, true);
 			}
-			else if (online == 0) {
+			else if (online == 0 && (_isOnline.get(userId) == true)) {
 				Presence presence = new Presence(Presence.Type.unavailable);
 
 				connection.sendPacket(presence);
+
+				_isOnline.put(userId, false);
 			}
 		}
 		catch (Exception e) {
@@ -462,6 +473,9 @@ public class JabberImpl implements Jabber {
 
 	private static Map<Long, Connection> _connections =
 		new HashMap<Long, Connection>();
+
+	private static Map<Long, Boolean> _isOnline =
+		new HashMap<Long, Boolean>();
 
 	private ConnectionConfiguration _connectionConfiguration;
 
