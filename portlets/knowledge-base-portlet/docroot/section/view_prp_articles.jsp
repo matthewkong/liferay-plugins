@@ -97,7 +97,7 @@ String orderByType = ParamUtil.getString(request, "orderByType", "desc");
 			</c:choose>
 		</div>
 	</c:if>
-	
+
 	<div class="kb-articles">
 
 		<%
