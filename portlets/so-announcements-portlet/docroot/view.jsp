@@ -48,6 +48,7 @@ int total = 0;
 <c:if test="<%= permissionChecker.isGroupAdmin(layout.getGroupId()) || permissionChecker.isGroupOwner(layout.getGroupId()) %>">
 	<div class="admin-actions">
 		<aui:button onClick='<%= renderResponse.getNamespace() + "addEntry()" %>' value="add-entry" />
+		<aui:button onClick='<%= renderResponse.getNamespace() + "manageEntries()" %>' value="manage-entries" />
 	</div>
 </c:if>
 
@@ -198,6 +199,12 @@ String distributionScope = ParamUtil.getString(request, "distributionScope");
 		<portlet:namespace />openPopup('<%= LanguageUtil.get(pageContext, "add-entry") %>', 500, 'so-portlet-announcements-edit-dialog', '<%= addEntryURL %>')
 	}
 
+	function <portlet:namespace />manageEntries() {
+		<portlet:renderURL var="manageEntriesURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="mvcPath" value="/manage_entries.jsp" /></portlet:renderURL>
+
+		<portlet:namespace />openWindow('<%= manageEntriesURL %>', '<%= LanguageUtil.get(pageContext, "manage-entries") %>', true, 800);
+	}
+
 	function <portlet:namespace />editEntry(uri) {
 		<portlet:namespace />openPopup('<%= LanguageUtil.get(pageContext, "edit-entry") %>', 500, 'so-portlet-announcements-edit-dialog', uri);
 	}
@@ -223,5 +230,19 @@ String distributionScope = ParamUtil.getString(request, "distributionScope");
 
 		dialog.show();
 		dialog.io.start();
+	}
+
+	function <portlet:namespace />openWindow(url, title, modal, width) {
+		Liferay.Util.openWindow(
+			{
+				dialog: {
+					align: Liferay.Util.Window.ALIGN_CENTER,
+					modal: modal,
+					width: width
+				},
+				title: title,
+				uri: url
+			}
+		);
 	}
 </aui:script>
