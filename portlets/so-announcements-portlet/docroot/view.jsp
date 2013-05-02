@@ -45,6 +45,12 @@ List<AnnouncementsEntry> results = null;
 int total = 0;
 %>
 
+<c:if test="<%= permissionChecker.isGroupAdmin(layout.getGroupId()) || permissionChecker.isGroupOwner(layout.getGroupId()) %>">
+	<div class="admin-actions">
+		<aui:button onClick='<%= renderResponse.getNamespace() + "addEntry()" %>' value="add-entry" />
+	</div>
+</c:if>
+
 <div class="unread-entries" id="unreadEntries">
 	<%@ include file="/entry_iterator.jspf" %>
 </div>
@@ -185,4 +191,37 @@ String distributionScope = ParamUtil.getString(request, "distributionScope");
 			);
 		}
 	);
+
+	function <portlet:namespace />addEntry() {
+		<portlet:renderURL var="addEntryURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="mvcPath" value="/edit_entry.jsp" /><portlet:param name="redirect" value="<%= currentURL %>" /></portlet:renderURL>
+
+		<portlet:namespace />openPopup('<%= LanguageUtil.get(pageContext, "add-entry") %>', 500, 'so-portlet-announcements-edit-dialog', '<%= addEntryURL %>')
+	}
+
+	function <portlet:namespace />editEntry(uri) {
+		<portlet:namespace />openPopup('<%= LanguageUtil.get(pageContext, "edit-entry") %>', 500, 'so-portlet-announcements-edit-dialog', uri);
+	}
+
+	function <portlet:namespace />openPopup(title, width, cssClass, url) {
+		var A = AUI();
+		var dialog = new A.Dialog(
+			{
+				align: Liferay.Util.Window.ALIGN_CENTER,
+				cssClass: cssClass,
+				modal: true,
+				resizable: true,
+				title: title,
+				width: width
+			}
+		).plug(
+			A.Plugin.IO,
+			{
+				autoLoad: false,
+				uri: url
+			}
+		).render();
+
+		dialog.show();
+		dialog.io.start();
+	}
 </aui:script>

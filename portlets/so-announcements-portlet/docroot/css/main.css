@@ -1,6 +1,10 @@
 @import "compass";
 
 .so-announcements-portlet {
+	.admin-actions {
+		margin-bottom: 1em;
+	}
+
 	.entry-item {
 		border-bottom: 1px solid #C8C9CA;
 		min-height: 45px;
@@ -147,5 +151,13 @@
 	.entry-scope {
 		color: #555;
 		display: block;
+	}
+}
+
+.so-portlet-announcements-edit-dialog-content {
+	.distribution-scope, .priority, .type {
+		.aui-field-content {
+			display: inline-block;
+		}
 	}
 }
