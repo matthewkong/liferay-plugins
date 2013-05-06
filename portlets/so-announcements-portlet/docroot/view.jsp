@@ -68,9 +68,11 @@ int visibleMessagesCount = total;
 flagValue = AnnouncementsFlagConstants.HIDDEN;
 
 searchContainer = new SearchContainer(renderRequest, null, null, "cur2", pageDelta, portletURL, null, "there-are-currently-no-read-entries");
+
+results = AnnouncementsEntryLocalServiceUtil.getEntries(user.getUserId(), scopes, portletName.equals(PortletKeys.ALERTS), flagValue, searchContainer.getStart(), searchContainer.getEnd());
 %>
 
-<c:if test="<%= themeDisplay.isSignedIn() %>">
+<c:if test="<%= (themeDisplay.isSignedIn()) && (results.size() != 0) %>">
 	<div class="read-entries" id="readEntries">
 		<div class="header">
 			<span><%= LanguageUtil.get(pageContext, "read-entries") %></span>
