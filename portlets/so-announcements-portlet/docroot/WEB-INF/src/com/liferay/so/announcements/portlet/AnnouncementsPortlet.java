@@ -104,14 +104,13 @@ public class AnnouncementsPortlet extends MVCPortlet {
 
 			jsonObject.put(
 				"redirect", ParamUtil.getString(actionRequest, "redirect"));
-
 			jsonObject.put("success", true);
 
 			String fromManageEntries = ParamUtil.getString(
 				actionRequest, "fromManageEntries");
 
 			if (Validator.isNotNull(fromManageEntries)) {
-				jsonObject.put("fromManageEntries", true);
+				jsonObject.put("fromManageEntries", fromManageEntries);
 			}
 		}
 		catch (Exception e) {
