@@ -66,6 +66,9 @@ public class AdminPortletDataHandler extends BasePortletDataHandler {
 
 	public AdminPortletDataHandler() {
 		setDataLevel(DataLevel.SITE);
+		setDeletionSystemEventClassNames(
+			KBArticle.class.getName(), KBComment.class.getName(),
+			KBTemplate.class.getName());
 		setExportControls(
 			new PortletDataHandlerBoolean(
 				NAMESPACE, "kb-articles", true, true),
