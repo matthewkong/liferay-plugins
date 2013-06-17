@@ -397,10 +397,6 @@ public class AdminPortletDataHandler extends BasePortletDataHandler {
 					kbArticle.getDescription(), sections, dirName,
 					serviceContext);
 
-				KBArticleLocalServiceUtil.moveKBArticle(
-					userId, existingKBArticle.getResourcePrimKey(),
-					parentResourcePrimKey, kbArticle.getPriority());
-
 				importedKBArticle =
 					KBArticleLocalServiceUtil.getLatestKBArticle(
 						existingKBArticle.getResourcePrimKey(),
@@ -412,6 +408,10 @@ public class AdminPortletDataHandler extends BasePortletDataHandler {
 				portletDataContext, null, parentResourcePrimKey, dirName,
 				kbArticleElement);
 		}
+
+		KBArticleLocalServiceUtil.moveKBArticle(
+			userId, importedKBArticle.getResourcePrimKey(),
+			parentResourcePrimKey, kbArticle.getPriority());
 
 		portletDataContext.importClassedModel(
 			kbArticle, importedKBArticle, NAMESPACE);
