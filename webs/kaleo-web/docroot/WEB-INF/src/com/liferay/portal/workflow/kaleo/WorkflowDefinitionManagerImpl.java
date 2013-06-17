@@ -23,6 +23,7 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.workflow.kaleo.model.KaleoDefinition;
 import com.liferay.portal.workflow.kaleo.runtime.WorkflowEngine;
 import com.liferay.portal.workflow.kaleo.service.KaleoDefinitionLocalServiceUtil;
+import com.liferay.portal.workflow.kaleo.util.WorkflowModelUtil;
 
 import java.io.InputStream;
 
@@ -148,7 +149,7 @@ public class WorkflowDefinitionManagerImpl
 				KaleoDefinitionLocalServiceUtil.getLatestKaleoDefinition(
 					name, serviceContext);
 
-			return new WorkflowDefinitionAdapter(kaleoDefinition);
+			return WorkflowModelUtil.toWorkflowDefinition(kaleoDefinition);
 		}
 		catch (Exception e) {
 			throw new WorkflowException(e);
@@ -169,7 +170,7 @@ public class WorkflowDefinitionManagerImpl
 				KaleoDefinitionLocalServiceUtil.getKaleoDefinition(
 					name, version, serviceContext);
 
-			return new WorkflowDefinitionAdapter(kaleoDefinition);
+			return WorkflowModelUtil.toWorkflowDefinition(kaleoDefinition);
 		}
 		catch (Exception e) {
 			throw new WorkflowException(e);
@@ -320,7 +321,7 @@ public class WorkflowDefinitionManagerImpl
 				KaleoDefinitionLocalServiceUtil.updateTitle(
 					name, version, title, serviceContext);
 
-			return new WorkflowDefinitionAdapter(kaleoDefinition);
+			return WorkflowModelUtil.toWorkflowDefinition(kaleoDefinition);
 		}
 		catch (Exception e) {
 			throw new WorkflowException(e);
@@ -342,7 +343,7 @@ public class WorkflowDefinitionManagerImpl
 
 		for (KaleoDefinition kaleoDefinition : kaleoDefinitions) {
 			workflowDefinitions.add(
-				new WorkflowDefinitionAdapter(kaleoDefinition));
+				WorkflowModelUtil.toWorkflowDefinition(kaleoDefinition));
 		}
 
 		return workflowDefinitions;

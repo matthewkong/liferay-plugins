@@ -27,7 +27,6 @@ import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.workflow.kaleo.BaseKaleoBean;
-import com.liferay.portal.workflow.kaleo.WorkflowTaskAdapter;
 import com.liferay.portal.workflow.kaleo.definition.ExecutionType;
 import com.liferay.portal.workflow.kaleo.model.KaleoInstance;
 import com.liferay.portal.workflow.kaleo.model.KaleoNode;
@@ -37,6 +36,7 @@ import com.liferay.portal.workflow.kaleo.model.KaleoTaskInstanceToken;
 import com.liferay.portal.workflow.kaleo.runtime.action.ActionExecutorUtil;
 import com.liferay.portal.workflow.kaleo.runtime.notification.NotificationUtil;
 import com.liferay.portal.workflow.kaleo.util.WorkflowContextUtil;
+import com.liferay.portal.workflow.kaleo.util.WorkflowModelUtil;
 
 import java.io.Serializable;
 
@@ -53,6 +53,7 @@ import java.util.Map;
 public class DefaultTaskManagerImpl
 	extends BaseKaleoBean implements TaskManager {
 
+	@Override
 	public WorkflowTask assignWorkflowTaskToRole(
 			long workflowTaskInstanceId, long roleId, String comment,
 			Date dueDate, Map<String, Serializable> workflowContext,
@@ -69,6 +70,7 @@ public class DefaultTaskManagerImpl
 		}
 	}
 
+	@Override
 	public WorkflowTask assignWorkflowTaskToUser(
 			long workflowTaskInstanceId, long assigneeUserId, String comment,
 			Date dueDate, Map<String, Serializable> workflowContext,
@@ -85,6 +87,7 @@ public class DefaultTaskManagerImpl
 		}
 	}
 
+	@Override
 	public WorkflowTask completeWorkflowTask(
 			long workflowTaskInstanceId, String transitionName, String comment,
 			Map<String, Serializable> workflowContext,
@@ -101,6 +104,7 @@ public class DefaultTaskManagerImpl
 		}
 	}
 
+	@Override
 	public WorkflowTask updateDueDate(
 			long workflowTaskInstanceId, String comment, Date dueDate,
 			ServiceContext serviceContext)
@@ -130,7 +134,7 @@ public class DefaultTaskManagerImpl
 				kaleoTaskInstanceToken, comment, workflowContext,
 				serviceContext);
 
-			return new WorkflowTaskAdapter(
+			return WorkflowModelUtil.toWorkflowTask(
 				kaleoTaskInstanceToken, workflowContext);
 		}
 		catch (Exception e) {
@@ -191,7 +195,8 @@ public class DefaultTaskManagerImpl
 			previousTaskAssignmentInstances, kaleoTaskInstanceToken, comment,
 			workflowContext, serviceContext);
 
-		return new WorkflowTaskAdapter(kaleoTaskInstanceToken, workflowContext);
+		return WorkflowModelUtil.toWorkflowTask(
+			kaleoTaskInstanceToken, workflowContext);
 	}
 
 	protected WorkflowTask doCompleteWorkflowTask(
@@ -236,7 +241,8 @@ public class DefaultTaskManagerImpl
 		kaleoLogLocalService.addTaskCompletionKaleoLog(
 			kaleoTaskInstanceToken, comment, workflowContext, serviceContext);
 
-		return new WorkflowTaskAdapter(kaleoTaskInstanceToken, workflowContext);
+		return WorkflowModelUtil.toWorkflowTask(
+			kaleoTaskInstanceToken, workflowContext);
 	}
 
 	protected Map<String, Serializable> updateWorkflowContext(
