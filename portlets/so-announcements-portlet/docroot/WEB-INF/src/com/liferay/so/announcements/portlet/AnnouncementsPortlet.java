@@ -141,9 +141,6 @@ public class AnnouncementsPortlet extends MVCPortlet {
 			displayDateHour += 12;
 		}
 
-		boolean displayImmediately = ParamUtil.getBoolean(
-			actionRequest, "displayImmediately");
-
 		int expirationDateMonth = ParamUtil.getInteger(
 			actionRequest, "expirationDateMonth");
 		int expirationDateDay = ParamUtil.getInteger(
@@ -171,9 +168,9 @@ public class AnnouncementsPortlet extends MVCPortlet {
 			AnnouncementsEntryServiceUtil.addEntry(
 				themeDisplay.getPlid(), classNameId, classPK, title, content,
 				url, type, displayDateMonth, displayDateDay, displayDateYear,
-				displayDateHour, displayDateMinute, displayImmediately,
-				expirationDateMonth, expirationDateDay, expirationDateYear,
-				expirationDateHour, expirationDateMinute, priority, alert);
+				displayDateHour, displayDateMinute, expirationDateMonth,
+				expirationDateDay, expirationDateYear, expirationDateHour,
+				expirationDateMinute, priority, alert);
 		}
 		else {
 
