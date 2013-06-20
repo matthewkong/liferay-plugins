@@ -186,6 +186,21 @@ public class AppLocalServiceWrapper implements AppLocalService,
 	}
 
 	/**
+	* Returns the app with the matching UUID and company.
+	*
+	* @param uuid the app's UUID
+	* @param companyId the primary key of the company
+	* @return the matching app, or <code>null</code> if a matching app could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Override
+	public com.liferay.marketplace.model.App fetchAppByUuidAndCompanyId(
+		java.lang.String uuid, long companyId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _appLocalService.fetchAppByUuidAndCompanyId(uuid, companyId);
+	}
+
+	/**
 	* Returns the app with the primary key.
 	*
 	* @param appId the primary key of the app
@@ -206,6 +221,23 @@ public class AppLocalServiceWrapper implements AppLocalService,
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _appLocalService.getPersistedModel(primaryKeyObj);
+	}
+
+	/**
+	* Returns the app with the matching UUID and company.
+	*
+	* @param uuid the app's UUID
+	* @param companyId the primary key of the company
+	* @return the matching app
+	* @throws PortalException if a matching app could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	@Override
+	public com.liferay.marketplace.model.App getAppByUuidAndCompanyId(
+		java.lang.String uuid, long companyId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _appLocalService.getAppByUuidAndCompanyId(uuid, companyId);
 	}
 
 	/**
@@ -281,17 +313,20 @@ public class AppLocalServiceWrapper implements AppLocalService,
 	}
 
 	@Override
-	public com.liferay.marketplace.model.App addApp(long userId,
-		long remoteAppId, java.lang.String version, java.io.File file)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return _appLocalService.addApp(userId, remoteAppId, version, file);
+	public void clearInstalledAppsCache() {
+		_appLocalService.clearInstalledAppsCache();
 	}
 
 	@Override
 	public com.liferay.marketplace.model.App fetchRemoteApp(long remoteAppId)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return _appLocalService.fetchRemoteApp(remoteAppId);
+	}
+
+	@Override
+	public java.util.List<com.liferay.marketplace.model.App> getInstalledApps()
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _appLocalService.getInstalledApps();
 	}
 
 	@Override
@@ -316,11 +351,21 @@ public class AppLocalServiceWrapper implements AppLocalService,
 	}
 
 	@Override
-	public com.liferay.marketplace.model.App updateApp(long appId,
-		java.lang.String version, java.io.File file)
+	public com.liferay.marketplace.model.App updateApp(long userId,
+		long remoteAppId, java.lang.String version, java.io.File file)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
-		return _appLocalService.updateApp(appId, version, file);
+		return _appLocalService.updateApp(userId, remoteAppId, version, file);
+	}
+
+	@Override
+	public com.liferay.marketplace.model.App updateApp(long userId,
+		long remoteAppId, java.lang.String title, java.lang.String description,
+		java.lang.String iconURL, java.lang.String version, java.io.File file)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _appLocalService.updateApp(userId, remoteAppId, title,
+			description, iconURL, version, file);
 	}
 
 	/**
