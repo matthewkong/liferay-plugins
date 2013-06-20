@@ -49,7 +49,11 @@ public class SOAnnouncementsEntryLocalServiceImpl
 			expirationDateMinute, priority, alert);
 
 		if (announcementEntry != null) {
-			sendNotificationEvent(announcementEntry);
+			Date now = new Date();
+
+			if (now.after(announcementEntry.getDisplayDate())) {
+				sendNotificationEvent(announcementEntry);
+			}
 		}
 
 		return announcementEntry;
