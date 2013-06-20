@@ -62,6 +62,29 @@ public class SOAnnouncementsEntryLocalServiceImpl
 	@Override
 	public void checkEntries() throws PortalException, SystemException {
 		super.checkEntries();
+
+		sendNotificationEvent();
+	}
+
+	protected static void sendNotificationEvent()
+		throws PortalException, SystemException {
+
+		Date now = new Date();
+
+		Date previousCheckDate = new Date(
+			now.getTime() - _ANNOUNCEMENTS_ENTRY_CHECK_INTERVAL);
+
+		List<AnnouncementsEntry> entries =
+			AnnouncementsEntryFinderUtil.findByDisplayDate(
+				now, previousCheckDate);
+
+		if (_log.isDebugEnabled()) {
+			_log.debug("Processing " + entries.size() + " entries");
+		}
+
+		for (AnnouncementsEntry entry : entries) {
+			sendNotificationEvent(entry);
+		}
 	}
 
 	protected void sendNotificationEvent(AnnouncementsEntry announcementEntry)
@@ -120,5 +143,12 @@ public class SOAnnouncementsEntryLocalServiceImpl
 				user.getCompanyId(), user.getUserId(), notificationEvent);
 		}
 	}
+
+	private static final long _ANNOUNCEMENTS_ENTRY_CHECK_INTERVAL =
+		GetterUtil.getInteger(PropsUtil.get(
+			PropsKeys.ANNOUNCEMENTS_ENTRY_CHECK_INTERVAL)) * Time.MINUTE;
+
+	private static Log _log = LogFactoryUtil.getLog(
+		SOAnnouncementsEntryLocalServiceImpl.class);
 
 }
