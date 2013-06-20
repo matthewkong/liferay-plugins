@@ -87,7 +87,7 @@ public class SOAnnouncementsEntryLocalServiceImpl
 		}
 	}
 
-	protected void sendNotificationEvent(AnnouncementsEntry announcementEntry)
+	protected static void sendNotificationEvent(AnnouncementsEntry announcementEntry)
 		throws PortalException, SystemException {
 
 		JSONObject notificationEventJSONObject =
