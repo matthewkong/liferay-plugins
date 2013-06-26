@@ -41,6 +41,7 @@ if (entry == null) {
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="entryId" type="hidden" value="<%= entryId %>" />
 	<aui:input name="alert" type="hidden" value="<%= portletName.equals(PortletKeys.ALERTS) %>" />
+	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= (entry == null) ? Constants.ADD : Constants.UPDATE %>" />
 
 	<aui:model-context bean="<%= entry %>" model="<%= AnnouncementsEntry.class %>" />
 
