@@ -163,11 +163,16 @@ if (entry == null) {
 							}
 						}
 						else {
-							Liferay.Util.getWindow('<portlet:namespace />Dialog').close();
+							if (responseData.fromManageEntries) {
+								window.location.href = '<%= redirect %>';
+							}
+							else {
+								Liferay.Util.getWindow('<portlet:namespace />Dialog').close();
 
-							var topWindow = Liferay.Util.getTop();
+								var topWindow = Liferay.Util.getTop();
 
-							topWindow.document.location.reload();
+								topWindow.document.location.reload();
+							}
 						}
 					}
 				},
