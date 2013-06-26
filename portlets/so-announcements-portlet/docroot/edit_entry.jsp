@@ -157,6 +157,18 @@ if (entry == null) {
 				<div class="entry-content" id="<%= renderResponse.getNamespace() + "entryContent" %>"></div>
 			</div>
 		</div>
+
+		<div class="entry-footer" id="<%= renderResponse.getNamespace() + "entryFooter" %>">
+			<div class="entry-footer-toolbar">
+				<div class="edit-actions">
+					<span class="toggle action aui-helper-hidden">
+						<a class="toggle-entry" data-entryId="preview" href="javascript:;">
+							<span><liferay-ui:message key="view-more" /></span>
+						</a>
+					</span>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 
@@ -211,6 +223,26 @@ if (entry == null) {
 		}
 
 		A.one('#<portlet:namespace />title').html(title);
+
+		var content = window.editor.getHTML();
+
+		var previewContent = A.one('#<portlet:namespace />entryContent');
+
+		previewContent.html(content);
+
+		var previewFooter = A.one('#<portlet:namespace />entryFooter');
+
+		if (previewContent.height() > 75) {
+			var toggle = preview.one('.toggle');
+
+			toggle.removeClass('aui-helper-hidden');
+			preview.addClass('announcement-collapsed')
+		}
+		else {
+			var contentContainer = preview.one('.entry-content-container');
+
+			contentContainer.setStyle('height', 'auto');
+		}
 	}
 
 	function <portlet:namespace />saveEntry() {
@@ -260,4 +292,16 @@ if (entry == null) {
 			}
 		);
 	}
+</aui:script>
+
+<aui:script use="aui-base">
+	var announcementEntries = A.one('#main-content');
+
+	announcementEntries.delegate(
+		'click',
+		function(event) {
+			Liferay.Announcements.toggleEntry(event,'<portlet:namespace />');
+		},
+		'.toggle-entry'
+	);
 </aui:script>
