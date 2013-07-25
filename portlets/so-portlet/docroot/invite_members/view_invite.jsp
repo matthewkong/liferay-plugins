@@ -57,7 +57,7 @@
 						<%
 						LinkedHashMap usersParams = new LinkedHashMap();
 
-						List<User> users = UserLocalServiceUtil.search(layout.getCompanyId(), StringPool.BLANK, WorkflowConstants.STATUS_APPROVED, usersParams, QueryUtil.ALL_POS, QueryUtil.ALL_POS, new UserFirstNameComparator(true));
+						List<User> users = UserLocalServiceUtil.search(layout.getCompanyId(), StringPool.BLANK, WorkflowConstants.STATUS_APPROVED, usersParams, 0, 100, new UserFirstNameComparator(true));
 
 						User defaultUser = UserLocalServiceUtil.getDefaultUser(layout.getCompanyId());
 
