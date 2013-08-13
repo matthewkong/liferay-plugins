@@ -201,6 +201,37 @@ ECJ was automatically installed. Please rerun your task.
 		</java>
 	</target>
 
+	<target name="setup-jrebel">
+		<property name="jrebel.plugin.classes.dir" value="${basedir}/${plugin.classes.dir}" />
+
+		<echo file="${jrebel.plugin.classes.dir}/rebel.xml"><![CDATA[<?xml version="1.0"?>
+
+<application
+	xmlns="http://www.zeroturnaround.com"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.zeroturnaround.com http://www.zeroturnaround.com/alderaan/rebel-2_0.xsd"
+>
+	<classpath>
+		<dir name="${jrebel.plugin.classes.dir}" />
+	</classpath>
+</application>]]></echo>
+
+		<if>
+			<available file="docroot" type="dir" />
+			<then>
+				<replace file="${jrebel.plugin.classes.dir}/rebel.xml">
+					<replacetoken><![CDATA[</application>]]></replacetoken>
+					<replacevalue><![CDATA[	<web>
+		<link target="/${plugin.name}">
+			<dir name="${basedir}/docroot" />
+		</link>
+	</web>
+</application>]]></replacevalue>
+				</replace>
+			</then>
+		</if>
+	</target>
+
 	<target name="sort-xml-attributes">
 		<java
 			classname="com.liferay.portal.tools.XMLAttributesSorter"
