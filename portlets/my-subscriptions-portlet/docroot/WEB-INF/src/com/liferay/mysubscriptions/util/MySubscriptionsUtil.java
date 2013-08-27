@@ -67,6 +67,11 @@ public class MySubscriptionsUtil {
 			return PortalUtil.getLayoutFullURL(classPK, PortletKeys.BLOGS);
 		}
 
+		if (className.equals(KNOWLEDGE_BASE_MODEL_CLASSNAME)) {
+			return PortalUtil.getLayoutFullURL(
+				classPK, PortletKeys.KNOWLEDGE_BASE_DISPLAY);
+		}
+
 		if (className.equals(Layout.class.getName())) {
 			return PortalUtil.getLayoutFullURL(
 				LayoutLocalServiceUtil.getLayout(classPK), themeDisplay);
@@ -122,6 +127,9 @@ public class MySubscriptionsUtil {
 
 			return bookmarksFolder.getName();
 		}
+		else if (className.equals(KNOWLEDGE_BASE_MODEL_CLASSNAME)) {
+			title = "Knowledge Base Article at ";
+		}
 		else if (className.equals(Layout.class.getName())) {
 			Layout layout = LayoutLocalServiceUtil.getLayout(classPK);
 
@@ -169,5 +177,8 @@ public class MySubscriptionsUtil {
 
 		return assetRendererFactory.getAssetRenderer(classPK);
 	}
+
+	private static final String KNOWLEDGE_BASE_MODEL_CLASSNAME =
+		"com.liferay.knowledgebase.model.KBArticle";
 
 }
