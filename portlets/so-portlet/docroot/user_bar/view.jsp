@@ -155,7 +155,7 @@ catch (NoSuchRoleException nsre) {
 		searchInput.on(
 			'click',
 			function(event) {
-				if (!(searchInput.get('value') == goToString)) {
+				if (searchInput.get('value') == goToString) {
 					searchInput.set('value', '');
 				}
 			}
