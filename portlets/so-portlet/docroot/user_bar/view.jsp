@@ -147,7 +147,6 @@ catch (NoSuchRoleException nsre) {
 
 		var userBar = A.one('#<portlet:namespace/>userBar');
 
-		var sitesPortlet = userBar.one('.so-portlet-sites .portlet-body');
 		var searchInput = userBar.one('.search input');
 
 		var goToString = '<liferay-ui:message key="go-to" /> ' + '\u25BE';
@@ -214,8 +213,8 @@ catch (NoSuchRoleException nsre) {
 
 		new Liferay.SO.UserMenu(
 			{
-				preventDefault: true,
 				node: '#<portlet:namespace/>userBar .user-menu',
+				preventDefault: true,
 				showClass: 'menu-active',
 				trigger: '#<portlet:namespace/>userBar .user-info'
 			}
