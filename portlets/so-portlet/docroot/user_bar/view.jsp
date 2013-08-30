@@ -46,12 +46,12 @@ catch (NoSuchRoleException nsre) {
 		<div class="so-portlet-user-bar" id="<portlet:namespace/>userBar">
 
 			<%
-			Group group = user.getGroup();
+			Group userGroup = user.getGroup();
 			%>
 
 			<liferay-portlet:actionURL portletName="<%= PortletKeys.SITE_REDIRECTOR %>" var="dashboardURL" windowState="<%= LiferayWindowState.NORMAL.toString() %>">
 				<portlet:param name="struts_action" value="/my_sites/view" />
-				<portlet:param name="groupId" value="<%= String.valueOf(group.getGroupId()) %>" />
+				<portlet:param name="groupId" value="<%= String.valueOf(userGroup.getGroupId()) %>" />
 				<portlet:param name="privateLayout" value="<%= Boolean.TRUE.toString() %>" />
 			</liferay-portlet:actionURL>
 
@@ -63,7 +63,7 @@ catch (NoSuchRoleException nsre) {
 				<ul class="dashboard-nav" id="<portlet:namespace/>dashboardNav">
 
 					<%
-					List<Layout> mylayouts = LayoutLocalServiceUtil.getLayouts(group.getGroupId(), true);
+					List<Layout> mylayouts = LayoutLocalServiceUtil.getLayouts(userGroup.getGroupId(), true);
 
 					for (Layout myLayout : mylayouts) {
 						if (myLayout.isRootLayout() && !myLayout.isHidden()) {
@@ -94,7 +94,7 @@ catch (NoSuchRoleException nsre) {
 					<liferay-util:include page="/dockbar_notifications/view.jsp" servletContext="<%= application %>" />
 				</li>
 				<li class="user-menu has-submenu">
-					<a class="user-info" href="<%= group.getPathFriendlyURL(false, themeDisplay) + "/" + user.getScreenName() %>">
+					<a class="user-info" href="<%= userGroup.getPathFriendlyURL(false, themeDisplay) + "/" + user.getScreenName() %>">
 						<span class="avatar">
 							<img alt="<%= user.getFullName() %>" src="<%= HtmlUtil.escape(user.getPortraitURL(themeDisplay)) %>">
 						</span>
@@ -106,7 +106,7 @@ catch (NoSuchRoleException nsre) {
 						<li>
 							<liferay-portlet:actionURL portletName="<%= PortletKeys.SITE_REDIRECTOR %>" var="profileURL" windowState="<%= LiferayWindowState.NORMAL.toString() %>">
 								<portlet:param name="struts_action" value="/my_sites/view" />
-								<portlet:param name="groupId" value="<%= String.valueOf(group.getGroupId()) %>" />
+								<portlet:param name="groupId" value="<%= String.valueOf(userGroup.getGroupId()) %>" />
 								<portlet:param name="privateLayout" value="<%= Boolean.FALSE.toString() %>" />
 							</liferay-portlet:actionURL>
 
