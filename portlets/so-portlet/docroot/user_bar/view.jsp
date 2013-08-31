@@ -30,6 +30,12 @@ catch (NoSuchRoleException nsre) {
 	// This exception should never be thrown except while SO is being uninstalled
 
 }
+
+Group group = null;
+
+if (layout != null) {
+	group = layout.getGroup();
+}
 %>
 
 <c:if test="<%= themeDisplay.isSignedIn() && socialOfficeUser %>">
@@ -46,12 +52,12 @@ catch (NoSuchRoleException nsre) {
 		<div class="so-portlet-user-bar" id="<portlet:namespace/>userBar">
 
 			<%
-			Group group = user.getGroup();
+			Group userGroup = user.getGroup();
 			%>
 
 			<liferay-portlet:actionURL portletName="<%= PortletKeys.SITE_REDIRECTOR %>" var="dashboardURL" windowState="<%= LiferayWindowState.NORMAL.toString() %>">
 				<portlet:param name="struts_action" value="/my_sites/view" />
-				<portlet:param name="groupId" value="<%= String.valueOf(group.getGroupId()) %>" />
+				<portlet:param name="groupId" value="<%= String.valueOf(userGroup.getGroupId()) %>" />
 				<portlet:param name="privateLayout" value="<%= Boolean.TRUE.toString() %>" />
 			</liferay-portlet:actionURL>
 
@@ -63,7 +69,7 @@ catch (NoSuchRoleException nsre) {
 				<ul class="dashboard-nav" id="<portlet:namespace/>dashboardNav">
 
 					<%
-					List<Layout> mylayouts = LayoutLocalServiceUtil.getLayouts(group.getGroupId(), true);
+					List<Layout> mylayouts = LayoutLocalServiceUtil.getLayouts(userGroup.getGroupId(), true);
 
 					for (Layout myLayout : mylayouts) {
 						if (myLayout.isRootLayout() && !myLayout.isHidden()) {
@@ -94,7 +100,7 @@ catch (NoSuchRoleException nsre) {
 					<liferay-util:include page="/dockbar_notifications/view.jsp" servletContext="<%= application %>" />
 				</li>
 				<li class="user-menu has-submenu">
-					<a class="user-info" href="<%= group.getPathFriendlyURL(false, themeDisplay) + "/" + user.getScreenName() %>">
+					<a class="user-info" href="<%= userGroup.getPathFriendlyURL(false, themeDisplay) + "/" + user.getScreenName() %>">
 						<span class="avatar">
 							<img alt="<%= user.getFullName() %>" src="<%= HtmlUtil.escape(user.getPortraitURL(themeDisplay)) %>">
 						</span>
@@ -106,7 +112,7 @@ catch (NoSuchRoleException nsre) {
 						<li>
 							<liferay-portlet:actionURL portletName="<%= PortletKeys.SITE_REDIRECTOR %>" var="profileURL" windowState="<%= LiferayWindowState.NORMAL.toString() %>">
 								<portlet:param name="struts_action" value="/my_sites/view" />
-								<portlet:param name="groupId" value="<%= String.valueOf(group.getGroupId()) %>" />
+								<portlet:param name="groupId" value="<%= String.valueOf(userGroup.getGroupId()) %>" />
 								<portlet:param name="privateLayout" value="<%= Boolean.FALSE.toString() %>" />
 							</liferay-portlet:actionURL>
 
@@ -129,15 +135,18 @@ catch (NoSuchRoleException nsre) {
 						</c:if>
 					</ul>
 				</li>
-				<li class="config-item">
-					<a class="config-icon" href="javascript:;" id="<portlet:namespace/>toggleDockbar">
-						<img alt="<liferay-ui:message key="configuration" /> <liferay-ui:message key="icon" />" height="15" src="<%= request.getContextPath() + "/user_bar/images/cog.png" %>" width="15" />
 
-						<span class="aui-helper-hidden">
-							<liferay-ui:message key="toggle" /> <liferay-ui:message key="javax.portlet.title.145" />
-						</span>
-					</a>
-				</li>
+				<c:if test="<%= !group.isControlPanel() %>">
+					<li class="config-item">
+						<a class="config-icon" href="javascript:;" id="<portlet:namespace/>toggleDockbar">
+							<img alt="<liferay-ui:message key="configuration" /> <liferay-ui:message key="icon" />" height="15" src="<%= request.getContextPath() + "/user_bar/images/cog.png" %>" width="15" />
+
+							<span class="aui-helper-hidden">
+								<liferay-ui:message key="toggle" /> <liferay-ui:message key="javax.portlet.title.145" />
+							</span>
+						</a>
+					</li>
+				</c:if>
 			</ul>
 		</div>
 	</liferay-util:body-top>
