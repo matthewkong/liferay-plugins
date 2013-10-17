@@ -17,37 +17,29 @@
 
 package com.liferay.so.hook.service.impl;
 
-import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.notifications.ChannelHubManagerUtil;
-import com.liferay.portal.kernel.notifications.NotificationEvent;
-import com.liferay.portal.kernel.notifications.NotificationEventFactoryUtil;
+import com.liferay.portal.kernel.messaging.DestinationNames;
+import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.process.ProcessCallable;
 import com.liferay.portal.kernel.process.ProcessException;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.Time;
-import com.liferay.portal.model.Group;
-import com.liferay.portal.model.Organization;
-import com.liferay.portal.model.Role;
-import com.liferay.portal.model.User;
-import com.liferay.portal.model.UserGroup;
-import com.liferay.portal.service.UserLocalServiceUtil;
-import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.announcements.model.AnnouncementsEntry;
 import com.liferay.portlet.announcements.service.AnnouncementsEntryLocalService;
+import com.liferay.portlet.announcements.service.AnnouncementsEntryLocalServiceUtil;
 import com.liferay.portlet.announcements.service.AnnouncementsEntryLocalServiceWrapper;
 import com.liferay.portlet.announcements.service.persistence.AnnouncementsEntryFinderUtil;
 
 import java.io.Serializable;
-import java.util.Collections;
+
 import java.util.Date;
 import java.util.List;
 
@@ -129,10 +121,11 @@ public class SOAnnouncementsEntryLocalServiceImpl
 		_previousCheckDate = now;
 	}
 
-	protected void sendNotificationEvent(AnnouncementsEntry announcementEntry)
+	protected void sendNotificationEvent(
+			final AnnouncementsEntry announcementEntry)
 		throws PortalException, SystemException {
 
-		JSONObject notificationEventJSONObject =
+		final JSONObject notificationEventJSONObject =
 			JSONFactoryUtil.createJSONObject();
 
 		notificationEventJSONObject.put("body", announcementEntry.getTitle());
@@ -145,45 +138,11 @@ public class SOAnnouncementsEntryLocalServiceImpl
 		notificationEventJSONObject.put(
 			"userId", announcementEntry.getUserId());
 
-		List<User> users = Collections.emptyList();
-
-		if (announcementEntry.getClassNameId() == 0) {
-			users = UserLocalServiceUtil.getUsers(
-				QueryUtil.ALL_POS, QueryUtil.ALL_POS);
-		}
-		else {
-			String className = PortalUtil.getClassName(
-				announcementEntry.getClassNameId());
-
-			if (className.equals(Group.class.getName())) {
-				users = UserLocalServiceUtil.getGroupUsers(
-					announcementEntry.getClassPK());
-			}
-			else if (className.equals(Organization.class.getName())) {
-				users = UserLocalServiceUtil.getOrganizationUsers(
-					announcementEntry.getClassPK());
-			}
-			else if (className.equals(Role.class.getName())) {
-				users = UserLocalServiceUtil.getRoleUsers(
-					announcementEntry.getClassPK());
-			}
-			else if (className.equals(UserGroup.class.getName())) {
-				users = UserLocalServiceUtil.getUserGroupUsers(
-					announcementEntry.getClassPK());
-			}
-		}
-
-		for (User user : users) {
-			NotificationEvent notificationEvent =
-				NotificationEventFactoryUtil.createNotificationEvent(
-					System.currentTimeMillis(), "6_WAR_soportlet",
-					notificationEventJSONObject);
-
-			notificationEvent.setDeliveryRequired(0);
-
-			ChannelHubManagerUtil.sendNotificationEvent(
-				user.getCompanyId(), user.getUserId(), notificationEvent);
-		}
+		MessageBusUtil.sendMessage(
+			DestinationNames.ASYNC_SERVICE,
+			new NotificationProcessCallable(
+				announcementEntry, notificationEventJSONObject)
+		);
 	}
 
 	private static final long _ANNOUNCEMENTS_ENTRY_CHECK_INTERVAL =
