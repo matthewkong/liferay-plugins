@@ -12,13 +12,24 @@
  * details.
  */
 
-package com.liferay.socialnetworking.members.social;
+package com.liferay.samplepaypalclassic.util;
 
 /**
- * @author Brian Wing Shun Chan
+ * @author Douglas Wong
  */
-public class MembersRequestKeys {
+public class PortletPropsKeys {
 
-	public static final int ADD_MEMBER = 1;
+	public static final String PAYPAL_APP_ID = "paypal.app.id";
+
+	public static final String PAYPAL_PASSWORD = "paypal.password";
+
+	public static final String PAYPAL_PRIMARY_RECEIVER_EMAIL =
+		"paypal.primary.receiver.email";
+
+	public static final String PAYPAL_SANDBOX_MODE = "paypal.sandbox.mode";
+
+	public static final String PAYPAL_SIGNATURE = "paypal.signature";
+
+	public static final String PAYPAL_USER_NAME = "paypal.user.name";
 
 }
