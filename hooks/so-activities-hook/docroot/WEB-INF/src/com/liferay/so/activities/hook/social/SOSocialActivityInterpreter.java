@@ -87,6 +87,10 @@ public abstract class SOSocialActivityInterpreter
 			SocialActivitySet activitySet, ServiceContext serviceContext)
 		throws Exception {
 
+		if (!isDisplay(activitySet)) {
+			return null;
+		}
+
 		if (activitySet.getActivityCount() == 1) {
 			List<SocialActivity> activities =
 				SocialActivityLocalServiceUtil.getActivitySetActivities(
@@ -470,6 +474,12 @@ public abstract class SOSocialActivityInterpreter
 		}
 
 		return false;
+	}
+
+	protected boolean isDisplay(SocialActivitySet activitySet)
+		throws Exception {
+
+		return true;
 	}
 
 	protected boolean isExpired(

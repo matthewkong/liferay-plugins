@@ -201,6 +201,34 @@ public class BlogsActivityInterpreter extends SOSocialActivityInterpreter {
 		return StringPool.BLANK;
 	}
 
+	@Override
+	protected boolean isDisplay(SocialActivitySet socialActivitySet)
+		throws Exception {
+
+		BlogsEntry blogsEntry = BlogsEntryLocalServiceUtil.fetchBlogsEntry(
+			socialActivitySet.getClassPK());
+
+		if (blogsEntry == null) {
+			return false;
+		}
+
+		long displayDate = blogsEntry.getDisplayDate().getTime();
+
+		long modifiedDate = socialActivitySet.getModifiedDate();
+
+		if (displayDate > modifiedDate) {
+			socialActivitySet.setModifiedDate(displayDate);
+			SocialActivitySetLocalServiceUtil.updateSocialActivitySet(
+				socialActivitySet);
+		}
+
+		if (System.currentTimeMillis() > displayDate) {
+			return true;
+		}
+
+		return false;
+	}
+
 	private static final String[] _CLASS_NAMES = {BlogsEntry.class.getName()};
 
 }
