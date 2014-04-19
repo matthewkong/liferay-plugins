@@ -99,6 +99,14 @@ public class SODataFactory extends DataFactory {
 		return _expandoValueModels;
 	}
 
+	public long getGroupExpandoColumnId() {
+		return _groupExpandoColumnId;
+	}
+
+	public long getGroupExpandoTableId() {
+		return _groupExpandoTableId;
+	}
+
 	public long getGroupId(long userId) {
 		return _userGroupIds.get(userId);
 	}
