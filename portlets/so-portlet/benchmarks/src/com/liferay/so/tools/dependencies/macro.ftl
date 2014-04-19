@@ -1,11 +1,5 @@
 <#setting number_format = "computer">
 
-<#macro insertRole
-	_userId
->
-	insert into Users_Roles values (${soUserRoleModel.roleId}, ${_userId});
-</#macro>
-
 <#macro insertExpando
 	_userId
 >
@@ -18,6 +12,12 @@
 	<#local userExpandoValueModel = dataFactory.newExpandoValueModel(dataFactory.getCounterNext(), dataFactory.groupExpandoTableId, dataFactory.groupExpandoColumnId, rowId, dataFactory.getGroupClassNameId(), dataFactory.getGroupId(_userId), "true")>
 
 	insert into ExpandoValue values (${userExpandoValueModel.valueId}, ${userExpandoValueModel.companyId}, ${userExpandoValueModel.tableId}, ${userExpandoValueModel.columnId}, ${userExpandoValueModel.rowId}, ${userExpandoValueModel.classNameId}, ${userExpandoValueModel.classPK}, '${userExpandoValueModel.data}');
+</#macro>
+
+<#macro insertRole
+	_userId
+>
+	insert into Users_Roles values (${soUserRoleModel.roleId}, ${_userId});
 </#macro>
 
 <#macro insertUserLayouts
@@ -33,6 +33,7 @@
 		<#local userLayoutFriendlyURLModel = dataFactory.newLayoutFriendlyURLModel(userLayoutModel)>
 
 		insert into LayoutFriendlyURL values (${userLayoutFriendlyURLModel.mvccVersion}, '${userLayoutFriendlyURLModel.uuid}', ${userLayoutFriendlyURLModel.layoutFriendlyURLId}, ${userLayoutFriendlyURLModel.groupId}, ${userLayoutFriendlyURLModel.companyId}, ${userLayoutFriendlyURLModel.userId}, '${userLayoutFriendlyURLModel.userName}', '${dataFactory.getDateString(userLayoutFriendlyURLModel.createDate)}', '${dataFactory.getDateString(userLayoutFriendlyURLModel.modifiedDate)}', ${userLayoutFriendlyURLModel.plid}, ${userLayoutFriendlyURLModel.privateLayout?string}, '${userLayoutFriendlyURLModel.friendlyURL}', '${userLayoutFriendlyURLModel.languageId}');
+
 	</#list>
 </#macro>
 
