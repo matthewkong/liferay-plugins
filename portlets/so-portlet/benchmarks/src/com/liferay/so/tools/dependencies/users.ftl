@@ -6,4 +6,8 @@
 	<@insertExpando
 		_userId = userId
 	/>
+
+	<@updateGroup
+		_userId = userId
+	/>
 </#list>

@@ -111,6 +111,10 @@ public class SODataFactory extends DataFactory {
 		return _userGroupIds.get(userId);
 	}
 
+	public String getGroupTypeSettings() {
+		return _GROUP_TYPE_SETTINGS;
+	}
+
 	public List<LayoutModel> getLayoutModels() {
 		_siteLayoutModels.addAll(_userSourcePrototypeLayoutModels);
 
