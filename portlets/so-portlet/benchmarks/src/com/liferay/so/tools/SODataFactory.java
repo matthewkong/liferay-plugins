@@ -146,6 +146,7 @@ public class SODataFactory extends DataFactory {
 	public void initLayoutSetPrototype() throws Exception {
 		setupLayoutSetPrototypeSite();
 		setupLayoutSetPrototypeUserPrivate();
+		setupLayoutSetPrototypeUserPublic();
 	}
 
 	public void initSOUserRoleModel() {
@@ -541,6 +542,77 @@ public class SODataFactory extends DataFactory {
 				userPrivateLayoutSetPrototypeGroupId, false, 0));
 	}
 
+	protected void setupLayoutSetPrototypeUserPublic() throws Exception {
+		long userPublicLayoutSetPrototypeId = getCounterNext();
+
+		_userPublicLayoutSetPrototypeModel = newLayoutSetPrototypeModel(
+			userPublicLayoutSetPrototypeId, getDefaultUserId(),
+			"Social Office User Public Home", StringPool.BLANK, true);
+
+		long expandoRowId = getCounterNext();
+
+		ExpandoValueModel expandoValueModel = newExpandoValueModel(
+			getCounterNext(), _layoutSetPrototypeExpandoTableId,
+			_layoutSetPrototypeExpandoColumnId, expandoRowId,
+			_layoutSetPrototypeClassNameId, userPublicLayoutSetPrototypeId,
+			SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY_USER_PRIVATE);
+
+		_expandoValueModels.add(expandoValueModel);
+
+		ExpandoRowModel expandoRowModel = newExpandoRowModel(
+			expandoRowId, _layoutSetPrototypeExpandoTableId,
+			userPublicLayoutSetPrototypeId);
+
+		_expandoRowModels.add(expandoRowModel);
+
+		long userPublicLayoutSetPrototypeGroupId = getCounterNext();
+
+		_layoutSetPrototypeGroupModels.add(
+			newLayoutSetPrototypeGroupModel(
+				userPublicLayoutSetPrototypeGroupId,
+				_layoutSetPrototypeClassNameId, userPublicLayoutSetPrototypeId,
+				String.valueOf(userPublicLayoutSetPrototypeId), false));
+
+		int originalSize = _userSourcePrototypeLayoutModels.size();
+
+		// Profile
+
+		_userSourcePrototypeLayoutModels.add(
+			newLayoutModel(
+				userPublicLayoutSetPrototypeGroupId, "Profile", false,
+				"1_2_columns_ii", "2_WAR_contactsportlet_INSTANCE_abcd",
+				"2_WAR_microblogsportlet,2_WAR_contactsportlet_INSTANCE_efgh," +
+					PortletKeys.SO_ACTIVITIES));
+
+		// Contacts
+
+		_userSourcePrototypeLayoutModels.add(
+			newLayoutModel(
+				userPublicLayoutSetPrototypeGroupId, "Contacts", false,
+				"1_column",
+				"2_WAR_contactsportlet_INSTANCE_abcd,1_WAR_contactsportlet",
+				null));
+
+		// Microblogs
+
+		_userSourcePrototypeLayoutModels.add(
+			newLayoutModel(
+				userPublicLayoutSetPrototypeGroupId, "Microblogs", false,
+				"1_column",
+				"2_WAR_contactsportlet_INSTANCE_abcd,1_WAR_microblogsportlet",
+				null));
+
+		_userPublicLayoutSetPrototypeLayoutSize =
+			_userSourcePrototypeLayoutModels.size() - originalSize;
+
+		_layoutSetModels.add(
+			newSOLayoutSetModel(userPublicLayoutSetPrototypeGroupId, true, 0));
+		_layoutSetModels.add(
+			newSOLayoutSetModel(
+				userPublicLayoutSetPrototypeGroupId, false,
+				_userPublicLayoutSetPrototypeLayoutSize));
+	}
+
 	private static final String _GROUP_TYPE_SETTINGS =
 		"customJspServletContextName=so-hook";
 
@@ -568,6 +640,7 @@ public class SODataFactory extends DataFactory {
 	private RoleModel _soUserRoleModel;
 	private int _userPrivateLayoutSetPrototypeLayoutSize;
 	private LayoutSetPrototypeModel _userPrivateLayoutSetPrototypeModel;
+	private LayoutSetPrototypeModel _userPublicLayoutSetPrototypeModel; private int _userPublicLayoutSetPrototypeLayoutSize;
 	private List<LayoutModel> _userSourcePrototypeLayoutModels =
 		new ArrayList<LayoutModel>();
 
