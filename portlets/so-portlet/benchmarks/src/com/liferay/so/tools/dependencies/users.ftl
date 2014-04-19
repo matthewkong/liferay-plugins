@@ -7,6 +7,10 @@
 		_userId = userId
 	/>
 
+	<@insertUserLayouts
+		_userId = userId
+	/>
+
 	<@updateGroup
 		_userId = userId
 	/>

@@ -133,12 +133,20 @@ public class SODataFactory extends DataFactory {
 		return _layoutSetPrototypeModels;
 	}
 
+	public List<LayoutModel> getSiteLayoutModels() {
+		return _siteLayoutModels;
+	}
+
 	public RoleModel getSOUserRoleModel() {
 		return _soUserRoleModel;
 	}
 
 	public Set<Long> getUserIds() {
 		return _userGroupIds.keySet();
+	}
+
+	public List<LayoutModel> getUserSourcePrototypeLayoutModels() {
+		return _userSourcePrototypeLayoutModels;
 	}
 
 	public void initExpandos() {
@@ -229,6 +237,29 @@ public class SODataFactory extends DataFactory {
 		layoutFriendlyURLModel.setPrivateLayout(layoutModel.getPrivateLayout());
 
 		return layoutFriendlyURLModel;
+	}
+
+	public LayoutModel newUserLayoutModel(
+		long groupId, LayoutModel sourcePrototypeLayout) {
+
+		LayoutModel layoutModel = (LayoutModel)sourcePrototypeLayout.clone();
+		layoutModel.setPlid(getCounterNext());
+		layoutModel.setGroupId(groupId);
+		layoutModel.setLayoutId(getCounterNext());
+
+		StringBundler sb = new StringBundler(4);
+
+		sb.append("last-merge-time=");
+		sb.append(System.currentTimeMillis());
+		sb.append(StringPool.SPACE);
+		sb.append(sourcePrototypeLayout.getTypeSettings());
+
+		layoutModel.setTypeSettings(sb.toString());
+
+		layoutModel.setSourcePrototypeLayoutUuid(
+			sourcePrototypeLayout.getUuid());
+
+		return layoutModel;
 	}
 
 	public List<LayoutSetModel> newUserLayoutSetModels(long userId) {

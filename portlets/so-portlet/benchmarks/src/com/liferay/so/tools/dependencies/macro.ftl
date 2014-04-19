@@ -20,6 +20,22 @@
 	insert into ExpandoValue values (${userExpandoValueModel.valueId}, ${userExpandoValueModel.companyId}, ${userExpandoValueModel.tableId}, ${userExpandoValueModel.columnId}, ${userExpandoValueModel.rowId}, ${userExpandoValueModel.classNameId}, ${userExpandoValueModel.classPK}, '${userExpandoValueModel.data}');
 </#macro>
 
+<#macro insertUserLayouts
+	_userId
+>
+	<#local groupId = dataFactory.getGroupId(_userId)>
+
+	<#list dataFactory.userSourcePrototypeLayoutModels as userSourcePrototypeLayoutModel>
+		<#local userLayoutModel = dataFactory.newUserLayoutModel(groupId, userSourcePrototypeLayoutModel)>
+
+		insert into Layout values (${userLayoutModel.mvccVersion}, '${userLayoutModel.uuid}', ${userLayoutModel.plid}, ${userLayoutModel.groupId}, ${userLayoutModel.companyId}, ${userLayoutModel.userId}, '${userLayoutModel.userName}', '${dataFactory.getDateString(userLayoutModel.createDate)}', '${dataFactory.getDateString(userLayoutModel.modifiedDate)}', ${userLayoutModel.privateLayout?string}, ${userLayoutModel.layoutId}, ${userLayoutModel.parentLayoutId}, '${userLayoutModel.name}', '${userLayoutModel.title}', '${userLayoutModel.description}', '${userLayoutModel.keywords}', '${userLayoutModel.robots}', '${userLayoutModel.type}', '${userLayoutModel.typeSettings}', ${userLayoutModel.hidden?string}, '${userLayoutModel.friendlyURL}', ${userLayoutModel.iconImageId}, '${userLayoutModel.themeId}', '${userLayoutModel.colorSchemeId}', '${userLayoutModel.wapThemeId}', '${userLayoutModel.wapColorSchemeId}', '${userLayoutModel.css}', ${userLayoutModel.priority}, '${userLayoutModel.layoutPrototypeUuid}', ${userLayoutModel.layoutPrototypeLinkEnabled?string}, '${userLayoutModel.sourcePrototypeLayoutUuid}');
+
+		<#local userLayoutFriendlyURLModel = dataFactory.newLayoutFriendlyURLModel(userLayoutModel)>
+
+		insert into LayoutFriendlyURL values (${userLayoutFriendlyURLModel.mvccVersion}, '${userLayoutFriendlyURLModel.uuid}', ${userLayoutFriendlyURLModel.layoutFriendlyURLId}, ${userLayoutFriendlyURLModel.groupId}, ${userLayoutFriendlyURLModel.companyId}, ${userLayoutFriendlyURLModel.userId}, '${userLayoutFriendlyURLModel.userName}', '${dataFactory.getDateString(userLayoutFriendlyURLModel.createDate)}', '${dataFactory.getDateString(userLayoutFriendlyURLModel.modifiedDate)}', ${userLayoutFriendlyURLModel.plid}, ${userLayoutFriendlyURLModel.privateLayout?string}, '${userLayoutFriendlyURLModel.friendlyURL}', '${userLayoutFriendlyURLModel.languageId}');
+	</#list>
+</#macro>
+
 <#macro updateGroup
 	_userId
 >
