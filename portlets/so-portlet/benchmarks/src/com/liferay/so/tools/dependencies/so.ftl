@@ -2,4 +2,6 @@
 
 <#include "expandos.ftl">
 
+<#include "roles.ftl">
+
 COMMIT_TRANSACTION

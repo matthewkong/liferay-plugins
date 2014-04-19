@@ -20,6 +20,7 @@ package com.liferay.so.tools;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.CompanyModel;
 import com.liferay.portal.model.LayoutSetPrototype;
+import com.liferay.portal.model.RoleModel;
 import com.liferay.portal.tools.samplesqlbuilder.DataFactory;
 import com.liferay.portlet.expando.model.ExpandoColumnConstants;
 import com.liferay.portlet.expando.model.ExpandoColumnModel;
@@ -27,6 +28,7 @@ import com.liferay.portlet.expando.model.ExpandoTableConstants;
 import com.liferay.portlet.expando.model.ExpandoTableModel;
 import com.liferay.portlet.expando.model.impl.ExpandoColumnImpl;
 import com.liferay.portlet.expando.model.impl.ExpandoTableImpl;
+import com.liferay.so.util.RoleConstants;
 import com.liferay.so.util.SocialOfficeConstants;
 
 import java.util.ArrayList;
@@ -42,6 +44,7 @@ public class SODataFactory extends DataFactory {
 		super(properties);
 
 		initExpandos();
+		initSOUserRoleModel();
 	}
 
 	public long getCompanyId() {
@@ -56,6 +59,10 @@ public class SODataFactory extends DataFactory {
 
 	public List<ExpandoTableModel> getExpandoTableModels() {
 		return _expandoTableModels;
+	}
+
+	public RoleModel getSOUserRoleModel() {
+		return _soUserRoleModel;
 	}
 
 	public void initExpandos() {
@@ -82,6 +89,11 @@ public class SODataFactory extends DataFactory {
 		newExpandoTableModel(
 			_layoutSetPrototypeExpandoTableId, _layoutSetPrototypeClassNameId,
 			ExpandoTableConstants.DEFAULT_TABLE_NAME);
+	}
+
+	public void initSOUserRoleModel() {
+		_soUserRoleModel = newRoleModel(
+			RoleConstants.SOCIAL_OFFICE_USER, RoleConstants.TYPE_REGULAR);
 	}
 
 	protected ExpandoColumnModel newExpandoColumnModel(
@@ -128,5 +140,6 @@ public class SODataFactory extends DataFactory {
 		LayoutSetPrototype.class.getName());
 	private long _layoutSetPrototypeExpandoColumnId;
 	private long _layoutSetPrototypeExpandoTableId;
+	private RoleModel _soUserRoleModel;
 
 }
