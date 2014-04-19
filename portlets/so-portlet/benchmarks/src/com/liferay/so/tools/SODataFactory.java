@@ -51,11 +51,15 @@ import com.liferay.so.util.SocialOfficeConstants;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * @author Matthew Kong
+ * @author Sherry Yang
  */
 public class SODataFactory extends DataFactory {
 
@@ -95,6 +99,10 @@ public class SODataFactory extends DataFactory {
 		return _expandoValueModels;
 	}
 
+	public long getGroupId(long userId) {
+		return _userGroupIds.get(userId);
+	}
+
 	public List<LayoutModel> getLayoutModels() {
 		_siteLayoutModels.addAll(_userSourcePrototypeLayoutModels);
 
@@ -115,6 +123,10 @@ public class SODataFactory extends DataFactory {
 
 	public RoleModel getSOUserRoleModel() {
 		return _soUserRoleModel;
+	}
+
+	public Set<Long> getUserIds() {
+		return _userGroupIds.keySet();
 	}
 
 	public void initExpandos() {
@@ -184,6 +196,15 @@ public class SODataFactory extends DataFactory {
 		expandoValueModel.setData(data);
 
 		return expandoValueModel;
+	}
+
+	@Override
+	public GroupModel newGroupModel(UserModel userModel) throws Exception {
+		GroupModel groupModel = super.newGroupModel(userModel);
+
+		_userGroupIds.put(userModel.getUserId(), groupModel.getGroupId());
+
+		return groupModel;
 	}
 
 	@Override
@@ -638,9 +659,11 @@ public class SODataFactory extends DataFactory {
 		new ArrayList<LayoutSetPrototypeModel>();
 	private List<LayoutModel> _siteLayoutModels = new ArrayList<LayoutModel>();
 	private RoleModel _soUserRoleModel;
+	private Map<Long, Long> _userGroupIds = new HashMap<Long, Long>();
 	private int _userPrivateLayoutSetPrototypeLayoutSize;
 	private LayoutSetPrototypeModel _userPrivateLayoutSetPrototypeModel;
-	private LayoutSetPrototypeModel _userPublicLayoutSetPrototypeModel; private int _userPublicLayoutSetPrototypeLayoutSize;
+	private int _userPublicLayoutSetPrototypeLayoutSize;
+	private LayoutSetPrototypeModel _userPublicLayoutSetPrototypeModel;
 	private List<LayoutModel> _userSourcePrototypeLayoutModels =
 		new ArrayList<LayoutModel>();
 
