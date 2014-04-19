@@ -10,4 +10,8 @@
 	<@updateGroup
 		_userId = userId
 	/>
+
+	<@updateUserLayoutSet
+		_userId = userId
+	/>
 </#list>

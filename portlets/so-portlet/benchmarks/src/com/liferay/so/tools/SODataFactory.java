@@ -231,6 +231,37 @@ public class SODataFactory extends DataFactory {
 		return layoutFriendlyURLModel;
 	}
 
+	public List<LayoutSetModel> newUserLayoutSetModels(long userId) {
+		List<LayoutSetModel> userLayoutSetModels =
+			new ArrayList<LayoutSetModel>();
+
+		LayoutSetModel userPrivateLayoutSetModel = newSOLayoutSetModel(
+			getGroupId(userId), true,
+			_userPrivateLayoutSetPrototypeLayoutSize + 1);
+
+		userPrivateLayoutSetModel.setSettings(
+			"last-merge-time=" + System.currentTimeMillis());
+		userPrivateLayoutSetModel.setLayoutSetPrototypeUuid(
+			_userPrivateLayoutSetPrototypeModel.getUuid());
+		userPrivateLayoutSetModel.setLayoutSetPrototypeLinkEnabled(true);
+
+		userLayoutSetModels.add(userPrivateLayoutSetModel);
+
+		LayoutSetModel userPublicLayoutSetModel = newSOLayoutSetModel(
+			getGroupId(userId), false,
+			_userPublicLayoutSetPrototypeLayoutSize + 1);
+
+		userPublicLayoutSetModel.setSettings(
+			"last-merge-time=" + System.currentTimeMillis());
+		userPublicLayoutSetModel.setLayoutSetPrototypeUuid(
+			_userPublicLayoutSetPrototypeModel.getUuid());
+		userPublicLayoutSetModel.setLayoutSetPrototypeLinkEnabled(true);
+
+		userLayoutSetModels.add(userPublicLayoutSetModel);
+
+		return userLayoutSetModels;
+	}
+
 	protected ExpandoColumnModel newExpandoColumnModel(
 		long columnId, long tableId, String name, int type, String defaultData,
 		String typeSettings) {

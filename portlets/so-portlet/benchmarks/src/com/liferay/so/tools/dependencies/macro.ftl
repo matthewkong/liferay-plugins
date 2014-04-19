@@ -25,3 +25,11 @@
 >
 	update Group_ set typeSettings='${dataFactory.groupTypeSettings}' where groupId=${dataFactory.getGroupId(_userId)};
 </#macro>
+
+<#macro updateUserLayoutSet
+	_userId
+>
+	<#list dataFactory.newUserLayoutSetModels(_userId) as layoutSetModel>
+		update LayoutSet set themeId='${layoutSetModel.themeId}', colorSchemeId='${layoutSetModel.colorSchemeId}', pageCount=${layoutSetModel.pageCount}, settings_='${layoutSetModel.settings}', layoutSetPrototypeUuid='${layoutSetModel.layoutSetPrototypeUuid}', layoutSetPrototypeLinkEnabled=${layoutSetModel.layoutSetPrototypeLinkEnabled?string} where groupId=${layoutSetModel.groupId} and privateLayout=${layoutSetModel.privateLayout?string};
+	</#list>
+</#macro>
