@@ -30,9 +30,11 @@ import com.liferay.portal.model.LayoutSetModel;
 import com.liferay.portal.model.LayoutSetPrototype;
 import com.liferay.portal.model.LayoutSetPrototypeModel;
 import com.liferay.portal.model.LayoutTypePortletConstants;
+import com.liferay.portal.model.ReleaseModel;
 import com.liferay.portal.model.RoleModel;
 import com.liferay.portal.model.UserModel;
 import com.liferay.portal.model.impl.LayoutSetPrototypeModelImpl;
+import com.liferay.portal.model.impl.ReleaseModelImpl;
 import com.liferay.portal.tools.samplesqlbuilder.DataFactory;
 import com.liferay.portal.tools.samplesqlbuilder.SequentialUUID;
 import com.liferay.portlet.expando.model.ExpandoColumnConstants;
@@ -67,8 +69,10 @@ public class SODataFactory extends DataFactory {
 		super(properties);
 
 		initExpandos();
-		initSOUserRoleModel();
+
 		initLayoutSetPrototype();
+		initReleases();
+		initSOUserRoleModel();
 	}
 
 	public long getCompanyId() {
@@ -133,6 +137,10 @@ public class SODataFactory extends DataFactory {
 		return _layoutSetPrototypeModels;
 	}
 
+	public List<ReleaseModel> getReleaseModels() {
+		return _releaseModels;
+	}
+
 	public List<LayoutModel> getSiteLayoutModels() {
 		return _siteLayoutModels;
 	}
@@ -179,6 +187,14 @@ public class SODataFactory extends DataFactory {
 		setupLayoutSetPrototypeSite();
 		setupLayoutSetPrototypeUserPrivate();
 		setupLayoutSetPrototypeUserPublic();
+	}
+
+	public void initReleases() {
+		newReleaseModel("contacts-portlet", 200);
+		newReleaseModel("marketplace-portlet", 100);
+		newReleaseModel("private-messaging-portlet", 101);
+		newReleaseModel("so-activities-hook", 101);
+		newReleaseModel("so-hook", 300);
 	}
 
 	public void initSOUserRoleModel() {
@@ -424,6 +440,25 @@ public class SODataFactory extends DataFactory {
 		_layoutSetPrototypeModels.add(layoutSetPrototypeModel);
 
 		return layoutSetPrototypeModel;
+	}
+
+	protected ReleaseModel newReleaseModel(
+		String servletContextName, int buildNumber) {
+
+		ReleaseModel releaseModel = new ReleaseModelImpl();
+
+		releaseModel.setReleaseId(getCounterNext());
+		releaseModel.setCreateDate(new Date());
+		releaseModel.setModifiedDate(new Date());
+		releaseModel.setServletContextName(servletContextName);
+		releaseModel.setBuildNumber(buildNumber);
+		releaseModel.setBuildDate(new Date());
+		releaseModel.setVerified(true);
+		releaseModel.setState(0);
+
+		_releaseModels.add(releaseModel);
+
+		return releaseModel;
 	}
 
 	protected LayoutSetModel newSOLayoutSetModel(
@@ -731,6 +766,7 @@ public class SODataFactory extends DataFactory {
 		new ArrayList<GroupModel>();
 	private List<LayoutSetPrototypeModel> _layoutSetPrototypeModels =
 		new ArrayList<LayoutSetPrototypeModel>();
+	private List<ReleaseModel> _releaseModels = new ArrayList<ReleaseModel>();
 	private List<LayoutModel> _siteLayoutModels = new ArrayList<LayoutModel>();
 	private RoleModel _soUserRoleModel;
 	private Map<Long, Long> _userGroupIds = new HashMap<Long, Long>();

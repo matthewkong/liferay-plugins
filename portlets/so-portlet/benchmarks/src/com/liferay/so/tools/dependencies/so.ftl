@@ -8,6 +8,8 @@
 
 <#include "layouts.ftl">
 
+<#include "releases.ftl">
+
 <#include "roles.ftl">
 
 <#include "users.ftl">
