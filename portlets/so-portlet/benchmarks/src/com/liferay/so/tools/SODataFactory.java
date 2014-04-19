@@ -23,12 +23,15 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.CompanyModel;
+import com.liferay.portal.model.GroupModel;
+import com.liferay.portal.model.LayoutFriendlyURLModel;
 import com.liferay.portal.model.LayoutModel;
 import com.liferay.portal.model.LayoutSetModel;
 import com.liferay.portal.model.LayoutSetPrototype;
 import com.liferay.portal.model.LayoutSetPrototypeModel;
 import com.liferay.portal.model.LayoutTypePortletConstants;
 import com.liferay.portal.model.RoleModel;
+import com.liferay.portal.model.UserModel;
 import com.liferay.portal.model.impl.LayoutSetPrototypeModelImpl;
 import com.liferay.portal.tools.samplesqlbuilder.DataFactory;
 import com.liferay.portal.tools.samplesqlbuilder.SequentialUUID;
@@ -42,6 +45,7 @@ import com.liferay.portlet.expando.model.impl.ExpandoColumnImpl;
 import com.liferay.portlet.expando.model.impl.ExpandoRowModelImpl;
 import com.liferay.portlet.expando.model.impl.ExpandoTableImpl;
 import com.liferay.portlet.expando.model.impl.ExpandoValueImpl;
+import com.liferay.so.util.PortletKeys;
 import com.liferay.so.util.RoleConstants;
 import com.liferay.so.util.SocialOfficeConstants;
 
@@ -60,6 +64,7 @@ public class SODataFactory extends DataFactory {
 
 		initExpandos();
 		initSOUserRoleModel();
+		initLayoutSetPrototype();
 	}
 
 	public long getCompanyId() {
@@ -68,12 +73,44 @@ public class SODataFactory extends DataFactory {
 		return companyModel.getCompanyId();
 	}
 
+	public long getDefaultUserId() {
+		UserModel defaultUserModel = getDefaultUserModel();
+
+		return defaultUserModel.getUserId();
+	}
+
 	public List<ExpandoColumnModel> getExpandoColumnModels() {
 		return _expandoColumnModels;
 	}
 
+	public List<ExpandoRowModel> getExpandoRowModels() {
+		return _expandoRowModels;
+	}
+
 	public List<ExpandoTableModel> getExpandoTableModels() {
 		return _expandoTableModels;
+	}
+
+	public List<ExpandoValueModel> getExpandoValueModels() {
+		return _expandoValueModels;
+	}
+
+	public List<LayoutModel> getLayoutModels() {
+		_siteLayoutModels.addAll(_userSourcePrototypeLayoutModels);
+
+		return _siteLayoutModels;
+	}
+
+	public List<LayoutSetModel> getLayoutSetModels() {
+		return _layoutSetModels;
+	}
+
+	public List<GroupModel> getLayoutSetPrototypeGroupModels() {
+		return _layoutSetPrototypeGroupModels;
+	}
+
+	public List<LayoutSetPrototypeModel> getLayoutSetPrototypeModels() {
+		return _layoutSetPrototypeModels;
 	}
 
 	public RoleModel getSOUserRoleModel() {
@@ -104,6 +141,10 @@ public class SODataFactory extends DataFactory {
 		newExpandoTableModel(
 			_layoutSetPrototypeExpandoTableId, _layoutSetPrototypeClassNameId,
 			ExpandoTableConstants.DEFAULT_TABLE_NAME);
+	}
+
+	public void initLayoutSetPrototype() throws Exception {
+		setupLayoutSetPrototypeSite();
 	}
 
 	public void initSOUserRoleModel() {
@@ -141,6 +182,18 @@ public class SODataFactory extends DataFactory {
 		expandoValueModel.setData(data);
 
 		return expandoValueModel;
+	}
+
+	@Override
+	public LayoutFriendlyURLModel newLayoutFriendlyURLModel(
+		LayoutModel layoutModel) {
+
+		LayoutFriendlyURLModel layoutFriendlyURLModel =
+			super.newLayoutFriendlyURLModel(layoutModel);
+
+		layoutFriendlyURLModel.setPrivateLayout(layoutModel.getPrivateLayout());
+
+		return layoutFriendlyURLModel;
 	}
 
 	protected ExpandoColumnModel newExpandoColumnModel(
@@ -209,6 +262,20 @@ public class SODataFactory extends DataFactory {
 		return layoutModel;
 	}
 
+	protected GroupModel newLayoutSetPrototypeGroupModel(
+			long groupId, long classNameId, long classPK, String name,
+			boolean site)
+		throws Exception {
+
+		GroupModel groupModel = super.newGroupModel(
+			groupId, classNameId, classPK, name, site);
+
+		groupModel.setTypeSettings(_GROUP_TYPE_SETTINGS);
+		groupModel.setFriendlyURL("/template-" + groupModel.getGroupId());
+
+		return groupModel;
+	}
+
 	protected LayoutSetPrototypeModel newLayoutSetPrototypeModel(
 		long layoutSetPrototypeId, long userId, String name, String description,
 		boolean active) {
@@ -274,6 +341,118 @@ public class SODataFactory extends DataFactory {
 		return layoutSetModel;
 	}
 
+	protected void setupLayoutSetPrototypeSite() throws Exception {
+		long siteLayoutSetPrototypeId = getCounterNext();
+
+		newLayoutSetPrototypeModel(
+			siteLayoutSetPrototypeId, getDefaultUserId(),
+			"Default Social Office Site", StringPool.BLANK, true);
+
+		long expandoRowId = getCounterNext();
+
+		ExpandoValueModel expandoValueModel = newExpandoValueModel(
+			getCounterNext(), _layoutSetPrototypeExpandoTableId,
+			_layoutSetPrototypeExpandoColumnId, expandoRowId,
+			_layoutSetPrototypeClassNameId, siteLayoutSetPrototypeId,
+			SocialOfficeConstants.LAYOUT_SET_PROTOTYPE_KEY_SITE);
+
+		_expandoValueModels.add(expandoValueModel);
+
+		ExpandoRowModel expandoRowModel = newExpandoRowModel(
+			expandoRowId, _layoutSetPrototypeExpandoTableId,
+			siteLayoutSetPrototypeId);
+
+		_expandoRowModels.add(expandoRowModel);
+
+		long siteLayoutSetPrototypeGroupId = getCounterNext();
+
+		_layoutSetPrototypeGroupModels.add(
+			newLayoutSetPrototypeGroupModel(
+				siteLayoutSetPrototypeGroupId, _layoutSetPrototypeClassNameId,
+				siteLayoutSetPrototypeId,
+				String.valueOf(siteLayoutSetPrototypeId), false));
+
+		// Home
+
+		String column1 =
+			PortletKeys.SO_ANNOUNCEMENTS + StringPool.COMMA +
+				PortletKeys.SO_ACTIVITIES;
+
+		StringBundler sb = new StringBundler(8);
+
+		sb.append("1_WAR_wysiwygportlet_INSTANCE_abcd,");
+		sb.append(PortletKeys.BOOKMARKS);
+		sb.append(StringPool.COMMA);
+		sb.append(PortletKeys.RSS);
+		sb.append("_INSTANCE_abcd,");
+		sb.append(PortletKeys.RECENT_DOCUMENTS);
+		sb.append(StringPool.COMMA);
+		sb.append("1_WAR_eventsdisplayportlet");
+
+		//Home
+
+		_siteLayoutModels.add(
+			newLayoutModel(
+				siteLayoutSetPrototypeGroupId, "Home", true, "2_columns_iii",
+				column1, sb.toString()));
+
+		// Calendar
+
+		_siteLayoutModels.add(
+			newLayoutModel(
+				siteLayoutSetPrototypeGroupId, "Calendar", true, "1_column",
+				"1_WAR_calendarportlet", null));
+
+		// Documents
+
+		_siteLayoutModels.add(
+			newLayoutModel(
+				siteLayoutSetPrototypeGroupId, "Documents", true, "1_column",
+				PortletKeys.DOCUMENT_LIBRARY, null));
+
+		// Forums
+
+		column1 =
+			PortletKeys.BREADCRUMB + "_INSTANCE_abcd," +
+				PortletKeys.MESSAGE_BOARDS;
+
+		_siteLayoutModels.add(
+			newLayoutModel(
+				siteLayoutSetPrototypeGroupId, "Forums", true, "1_column",
+				column1, null));
+
+		// Blog
+
+		_siteLayoutModels.add(
+			newLayoutModel(
+				siteLayoutSetPrototypeGroupId, "Blogs", true, "2_columns_iii",
+				PortletKeys.BLOGS, PortletKeys.BLOGS_AGGREGATOR));
+
+		// Wiki
+
+		_siteLayoutModels.add(
+			newLayoutModel(
+				siteLayoutSetPrototypeGroupId, "Wiki", true, "1_column",
+				PortletKeys.WIKI, null));
+
+		// Members
+
+		_siteLayoutModels.add(
+			newLayoutModel(
+				siteLayoutSetPrototypeGroupId, "Members", true, "1_column",
+				PortletKeys.SO_INVITE_MEMBERS + ",4_WAR_contactsportlet",
+				null));
+
+		_layoutSetModels.add(
+			newSOLayoutSetModel(siteLayoutSetPrototypeGroupId, true,
+			_siteLayoutModels.size()));
+		_layoutSetModels.add(
+			newSOLayoutSetModel(siteLayoutSetPrototypeGroupId, false, 0));
+	}
+
+	private static final String _GROUP_TYPE_SETTINGS =
+		"customJspServletContextName=so-hook";
+
 	private List<ExpandoColumnModel> _expandoColumnModels =
 		new ArrayList<ExpandoColumnModel>();
 	private List<ExpandoRowModel> _expandoRowModels =
@@ -281,15 +460,22 @@ public class SODataFactory extends DataFactory {
 	private List<ExpandoTableModel> _expandoTableModels =
 		new ArrayList<ExpandoTableModel>();
 	private List<ExpandoValueModel> _expandoValueModels =
-					new ArrayList<ExpandoValueModel>();
+		new ArrayList<ExpandoValueModel>();
 	private long _groupExpandoColumnId;
 	private long _groupExpandoTableId;
+	private List<LayoutSetModel> _layoutSetModels =
+		new ArrayList<LayoutSetModel>();
 	private long _layoutSetPrototypeClassNameId = getClassNameId(
 		LayoutSetPrototype.class.getName());
 	private long _layoutSetPrototypeExpandoColumnId;
 	private long _layoutSetPrototypeExpandoTableId;
+	private List<GroupModel> _layoutSetPrototypeGroupModels =
+		new ArrayList<GroupModel>();
 	private List<LayoutSetPrototypeModel> _layoutSetPrototypeModels =
-					new ArrayList<LayoutSetPrototypeModel>();
+		new ArrayList<LayoutSetPrototypeModel>();
+	private List<LayoutModel> _siteLayoutModels = new ArrayList<LayoutModel>();
 	private RoleModel _soUserRoleModel;
+	private List<LayoutModel> _userSourcePrototypeLayoutModels =
+		new ArrayList<LayoutModel>();
 
 }
