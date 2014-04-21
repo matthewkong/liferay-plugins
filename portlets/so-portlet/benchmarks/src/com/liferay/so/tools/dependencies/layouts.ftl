@@ -10,5 +10,5 @@
 </#list>
 
 <#list dataFactory.layoutSetPrototypeModels as layoutSetPrototypeModel>
-	insert into LayoutSetProtoType values (${layoutSetPrototypeModel.mvccVersion}, '${layoutSetPrototypeModel.uuid}', ${layoutSetPrototypeModel.layoutSetPrototypeId}, ${layoutSetPrototypeModel.companyId}, ${layoutSetPrototypeModel.userId}, '${layoutSetPrototypeModel.userName}', '${dataFactory.getDateString(layoutSetPrototypeModel.createDate)}', '${dataFactory.getDateString(layoutSetPrototypeModel.modifiedDate)}', '${layoutSetPrototypeModel.name}', '${layoutSetPrototypeModel.description}', '${layoutSetPrototypeModel.settings}', ${layoutSetPrototypeModel.active?string});
+	insert into LayoutSetPrototype values (${layoutSetPrototypeModel.mvccVersion}, '${layoutSetPrototypeModel.uuid}', ${layoutSetPrototypeModel.layoutSetPrototypeId}, ${layoutSetPrototypeModel.companyId}, ${layoutSetPrototypeModel.userId}, '${layoutSetPrototypeModel.userName}', '${dataFactory.getDateString(layoutSetPrototypeModel.createDate)}', '${dataFactory.getDateString(layoutSetPrototypeModel.modifiedDate)}', '${layoutSetPrototypeModel.name}', '${layoutSetPrototypeModel.description}', '${layoutSetPrototypeModel.settings}', ${layoutSetPrototypeModel.active?string});
 </#list>

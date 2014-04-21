@@ -33,7 +33,6 @@
 		<#local userLayoutFriendlyURLModel = dataFactory.newLayoutFriendlyURLModel(userLayoutModel)>
 
 		insert into LayoutFriendlyURL values (${userLayoutFriendlyURLModel.mvccVersion}, '${userLayoutFriendlyURLModel.uuid}', ${userLayoutFriendlyURLModel.layoutFriendlyURLId}, ${userLayoutFriendlyURLModel.groupId}, ${userLayoutFriendlyURLModel.companyId}, ${userLayoutFriendlyURLModel.userId}, '${userLayoutFriendlyURLModel.userName}', '${dataFactory.getDateString(userLayoutFriendlyURLModel.createDate)}', '${dataFactory.getDateString(userLayoutFriendlyURLModel.modifiedDate)}', ${userLayoutFriendlyURLModel.plid}, ${userLayoutFriendlyURLModel.privateLayout?string}, '${userLayoutFriendlyURLModel.friendlyURL}', '${userLayoutFriendlyURLModel.languageId}');
-
 	</#list>
 </#macro>
 
