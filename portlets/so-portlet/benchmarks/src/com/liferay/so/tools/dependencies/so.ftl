@@ -14,4 +14,6 @@
 
 <#include "users.ftl">
 
+<#include "counter.ftl">
+
 COMMIT_TRANSACTION

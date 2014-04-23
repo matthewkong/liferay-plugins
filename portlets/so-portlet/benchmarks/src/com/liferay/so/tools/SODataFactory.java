@@ -17,6 +17,9 @@
 
 package com.liferay.so.tools;
 
+import com.liferay.counter.model.Counter;
+import com.liferay.counter.model.CounterModel;
+import com.liferay.counter.model.impl.CounterModelImpl;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -143,6 +146,16 @@ public class SODataFactory extends DataFactory {
 
 	public List<LayoutModel> getSiteLayoutModels() {
 		return _siteLayoutModels;
+	}
+
+	public CounterModel getSOCounterModel() {
+
+		CounterModel counterModel = new CounterModelImpl();
+
+		counterModel.setName(Counter.class.getName());
+		counterModel.setCurrentId(getCounter().get());
+
+		return counterModel;
 	}
 
 	public RoleModel getSOUserRoleModel() {
