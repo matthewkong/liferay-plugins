@@ -44,11 +44,62 @@ public class TasksEntryFinderImpl
 	public static final String FIND_BY_C_T =
 		TasksEntryFinder.class.getName() + ".findByC_T";
 
+	public int countByG_A_R_S(
+			long groupId, long assigneeUserId, long reporterUserId, int status)
+		throws SystemException {
+
+		int[] statuses = getStatuses(status);
+
+		if (assigneeUserId > 0) {
+			if (statuses.length > 0) {
+				if (groupId > 0) {
+					return TasksEntryUtil.countByG_A_S(
+						groupId, assigneeUserId, statuses);
+				}
+
+				return TasksEntryUtil.countByA_S(assigneeUserId, statuses);
+			}
+			else {
+				if (groupId > 0) {
+					return TasksEntryUtil.countByG_A(groupId, assigneeUserId);
+				}
+
+				return TasksEntryUtil.countByAssigneeUserId(assigneeUserId);
+			}
+		}
+		else if (reporterUserId > 0) {
+			if (statuses.length > 0) {
+				if (groupId > 0) {
+					return TasksEntryUtil.countByG_U_S(
+						groupId, reporterUserId, statuses);
+				}
+
+				return TasksEntryUtil.countByU_S(reporterUserId, statuses);
+			}
+			else {
+				if (groupId > 0) {
+					return TasksEntryUtil.countByG_U(groupId, reporterUserId);
+				}
+
+				return TasksEntryUtil.countByUserId(reporterUserId);
+			}
+		}
+
+		return 0;
+	}
+
 	public int countByG_P_A_R_S_T_N(
 			long groupId, int priority, long assigneeUserId,
 			long reporterUserId, int status, long[] assetTagIds,
 			long[] notAssetTagIds)
 		throws SystemException {
+
+		if ((assetTagIds.length == 0) && (notAssetTagIds.length == 0) &&
+			(priority <= 0)) {
+
+			return countByG_A_R_S(
+				groupId, assigneeUserId, reporterUserId, status);
+		}
 
 		Session session = null;
 
@@ -166,11 +217,68 @@ public class TasksEntryFinderImpl
 		}
 	}
 
+	public List<TasksEntry> findByG_A_R_S(
+			long groupId, long assigneeUserId, long reporterUserId, int status,
+			int start, int end)
+		throws SystemException {
+
+		int[] statuses = getStatuses(status);
+
+		if (assigneeUserId > 0) {
+			if (statuses.length > 0) {
+				if (groupId > 0) {
+					return TasksEntryUtil.findByG_A_S(
+						groupId, assigneeUserId, statuses, start, end);
+				}
+
+				return TasksEntryUtil.findByA_S(
+					assigneeUserId, statuses, start, end);
+			}
+			else {
+				if (groupId > 0) {
+					return TasksEntryUtil.findByG_A(
+						groupId, assigneeUserId, start, end);
+				}
+
+				return TasksEntryUtil.findByAssigneeUserId(
+					assigneeUserId, start, end);
+			}
+		}
+		else if (reporterUserId > 0) {
+			if (statuses.length > 0) {
+				if (groupId > 0) {
+					return TasksEntryUtil.findByG_U_S(
+						groupId, reporterUserId, statuses, start, end);
+				}
+
+				return TasksEntryUtil.findByU_S(
+					reporterUserId, statuses, start, end);
+			}
+			else {
+				if (groupId > 0) {
+					return TasksEntryUtil.findByG_U(
+						groupId, reporterUserId, start, end);
+				}
+
+				return TasksEntryUtil.findByUserId(reporterUserId, start, end);
+			}
+		}
+
+		return null;
+	}
+
 	public List<TasksEntry> findByG_P_A_R_S_T_N(
 			long groupId, int priority, long assigneeUserId,
 			long reporterUserId, int status, long[] assetTagIds,
 			long[] notAssetTagIds, int start, int end)
 		throws SystemException {
+
+		if ((assetTagIds.length == 0) && (notAssetTagIds.length == 0) &&
+			(priority <= 0)) {
+
+			return findByG_A_R_S(
+				groupId, assigneeUserId, reporterUserId, status, start, end);
+		}
 
 		Session session = null;
 
@@ -283,6 +391,24 @@ public class TasksEntryFinderImpl
 		finally {
 			closeSession(session);
 		}
+	}
+
+	protected int[] getStatuses(int status) {
+		if (status == TasksEntryConstants.STATUS_ALL) {
+			return new int[0];
+		}
+
+		if (status == TasksEntryConstants.STATUS_RESOLVED) {
+			return new int[]{status};
+		}
+
+		return new int[] {
+			TasksEntryConstants.STATUS_OPEN,
+			TasksEntryConstants.STATUS_PERCENT_TWENTY,
+			TasksEntryConstants.STATUS_PERCENT_SIXTY,
+			TasksEntryConstants.STATUS_PERCENT_FORTY,
+			TasksEntryConstants.STATUS_PERCENT_EIGHTY,
+			TasksEntryConstants.STATUS_REOPENED};
 	}
 
 	protected void setTagsEntryIds(QueryPos qPos, long[] assetTagIds) {
