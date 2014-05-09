@@ -21,6 +21,14 @@ import com.liferay.portal.kernel.util.ReferenceRegistry;
  * @author Ryan Park
  */
 public class TasksEntryFinderUtil {
+	public static int countByG_A_R_S(long groupId, long assigneeUserId,
+		long reporterUserId, int status)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getFinder()
+				   .countByG_A_R_S(groupId, assigneeUserId, reporterUserId,
+			status);
+	}
+
 	public static int countByG_P_A_R_S_T_N(long groupId, int priority,
 		long assigneeUserId, long reporterUserId, int status,
 		long[] assetTagIds, long[] notAssetTagIds)
@@ -28,6 +36,15 @@ public class TasksEntryFinderUtil {
 		return getFinder()
 				   .countByG_P_A_R_S_T_N(groupId, priority, assigneeUserId,
 			reporterUserId, status, assetTagIds, notAssetTagIds);
+	}
+
+	public static java.util.List<com.liferay.tasks.model.TasksEntry> findByG_A_R_S(
+		long groupId, long assigneeUserId, long reporterUserId, int status,
+		int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getFinder()
+				   .findByG_A_R_S(groupId, assigneeUserId, reporterUserId,
+			status, start, end);
 	}
 
 	public static java.util.List<com.liferay.tasks.model.TasksEntry> findByG_P_A_R_S_T_N(
