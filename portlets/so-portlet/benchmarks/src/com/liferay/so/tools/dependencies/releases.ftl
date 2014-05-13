@@ -1,0 +1,3 @@
+<#list dataFactory.getReleaseModels() as releaseModel>
+	insert into Release_ values (${releaseModel.mvccVersion}, ${releaseModel.releaseId}, '${dataFactory.getDateString(releaseModel.createDate)}', '${dataFactory.getDateString(releaseModel.modifiedDate)}', '${releaseModel.servletContextName}', ${releaseModel.buildNumber}, '${dataFactory.getDateString(releaseModel.buildDate)}', ${releaseModel.verified?string}, ${releaseModel.state}, '${releaseModel.testString}');
+</#list>
