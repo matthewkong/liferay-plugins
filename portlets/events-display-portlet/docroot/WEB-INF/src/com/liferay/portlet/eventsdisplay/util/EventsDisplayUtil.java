@@ -68,8 +68,8 @@ public class EventsDisplayUtil {
 	}
 
 	public static Map<Integer, List<CalendarBooking>> getCalendarBookings(
-			int maxDaysDisplayed, ThemeDisplay themeDisplay, long layoutGroupId,
-			Calendar jCalendar)
+			long layoutGroupId, ThemeDisplay themeDisplay, Calendar jCalendar,
+			int maxDaysDisplayed)
 		throws PortalException, SystemException {
 
 		long[] groupIds = getGroupIds(layoutGroupId, themeDisplay);
