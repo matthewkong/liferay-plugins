@@ -253,11 +253,22 @@ public class BlogsActivityInterpreter extends SOSocialActivityInterpreter {
 
 		long displayTime = displayDate.getTime();
 
-		if (displayTime < System.currentTimeMillis()) {
-			return true;
+		if (displayTime > System.currentTimeMillis()) {
+			return false;
 		}
 
-		return false;
+		if ((activity.getType() ==
+				SocialActivityKeyConstants.BLOGS_ADD_COMMENT) ||
+			(activity.getType() ==
+				SocialActivityKeyConstants.BLOGS_UPDATE_ENTRY) ||
+			(activity.getType() == SocialActivityConstants.TYPE_ADD_COMMENT)) {
+
+			if (activity.getCreateDate() < displayTime) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	private static final String[] _CLASS_NAMES = {BlogsEntry.class.getName()};
