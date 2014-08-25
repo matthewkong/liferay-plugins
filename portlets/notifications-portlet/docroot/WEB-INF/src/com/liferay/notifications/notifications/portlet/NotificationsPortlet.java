@@ -19,6 +19,8 @@ import com.liferay.notifications.util.PortletPropsValues;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.notifications.UserNotificationDefinition;
+import com.liferay.portal.kernel.notifications.UserNotificationDeliveryType;
 import com.liferay.portal.kernel.notifications.UserNotificationFeedEntry;
 import com.liferay.portal.kernel.notifications.UserNotificationManagerUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
@@ -32,6 +34,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.User;
+import com.liferay.portal.model.UserNotificationDelivery;
 import com.liferay.portal.model.UserNotificationDeliveryConstants;
 import com.liferay.portal.model.UserNotificationEvent;
 import com.liferay.portal.service.PortletLocalServiceUtil;
@@ -227,6 +230,23 @@ public class NotificationsPortlet extends MVCPortlet {
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
 		try {
+			UserNotificationDelivery userNotificationDelivery =
+				UserNotificationDeliveryLocalServiceUtil.
+					getUserNotificationDelivery(userNotificationDeliveryId);
+
+			UserNotificationDefinition userNotificationDefinition =
+				UserNotificationManagerUtil.fetchUserNotificationDefinition(
+					userNotificationDelivery.getPortletId(), 0,
+					userNotificationDelivery.getNotificationType());
+
+			UserNotificationDeliveryType userNotificationDeliveryType =
+				userNotificationDefinition.getUserNotificationDeliveryType(
+					userNotificationDelivery.getDeliveryType());
+
+			if (!userNotificationDeliveryType.isModifiable()) {
+				deliver = userNotificationDeliveryType.isDefault();
+			}
+
 			UserNotificationDeliveryLocalServiceUtil.
 				updateUserNotificationDelivery(
 					userNotificationDeliveryId, deliver);
