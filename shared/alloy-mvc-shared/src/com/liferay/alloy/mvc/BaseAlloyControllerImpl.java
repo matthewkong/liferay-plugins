@@ -954,37 +954,29 @@ public abstract class BaseAlloyControllerImpl implements AlloyController {
 		String data = StringPool.BLANK;
 
 		if (isRespondingTo("json")) {
-			if (object instanceof AlloySearchResult) {
-				JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
+			if (object instanceof AlloySearchResult) {
 				Hits hits = ((AlloySearchResult)object).getHits();
 
 				Document[] documents = hits.getDocs();
 
 				jsonObject.put(controllerPath, toJSONArray(documents));
-
-				data = jsonObject.toString();
 			}
 			else if (object instanceof Collection) {
-				JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
-
 				Object[] objects =
 					((Collection)object).toArray(new BaseModel[0]);
 
 				jsonObject.put(controllerPath, toJSONArray(objects));
-
-				data = jsonObject.toString();
 			}
 			else if (object instanceof JSONArray) {
-				JSONArray jsonArray = (JSONArray)object;
-
-				data = jsonArray.toString();
+				jsonObject.put(controllerPath, (JSONArray)object);
 			}
 			else {
-				JSONObject jsonObject = toJSONObject(object);
-
-				data = jsonObject.toString();
+				jsonObject = toJSONObject(object);
 			}
+
+			data = jsonObject.toString();
 		}
 
 		responseContent = buildResponseContent(data, StringPool.BLANK, status);
